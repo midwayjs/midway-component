@@ -53,3 +53,4 @@ export class IndexHandler implements FunctionHandler {
 
 - No agent worker and IPC Messager
 - Does not support stream related plugins
+- Will not load the current directory as a plugin
