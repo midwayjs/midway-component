@@ -47,3 +47,9 @@ export class IndexHandler implements FunctionHandler {
 }
 
 ```
+
+
+## Some differences
+
+- No agent worker and IPC Messager
+- Does not support stream related plugins
