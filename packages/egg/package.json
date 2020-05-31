@@ -1,11 +1,11 @@
 {
   "name": "@midwayjs-component/egg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@midwayjs/decorator": "2",
     "@midwayjs/component-postinstall": "1",
+    "@midwayjs/decorator": "2",
     "@midwayjs/faas-typings": "^0.3.0",
     "egg": "^2.25.0"
   },
