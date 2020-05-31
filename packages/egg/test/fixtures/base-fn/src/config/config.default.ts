@@ -5,9 +5,12 @@ export default (appInfo) => {
     eggPlugins: {
       mysql: {
         enable: true,
-        path: join(appInfo.baseDir, '../../../../../node_modules/egg-mysql')
+        package: 'egg-mysql'
       }
     },
+    eggPaths:[
+      join(appInfo.baseDir, '../../../../../../../')
+    ],
     middleware: ['bbb']
   }
 }

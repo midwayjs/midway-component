@@ -5,7 +5,7 @@ import {
   FaaSHTTPRequest,
   FaaSHTTPContext,
 } from '@midwayjs/faas-typings';
-import { EggApplication } from './index';
+import { EggApplication } from './application';
 
 @Configuration({
   importConfigs: [
@@ -23,18 +23,15 @@ export class ContainerConfiguration {
 
   @Config('eggPlugins')
   eggPlugins;
-  
+
+  @Config('eggPaths')
+  eggPaths;
+
   async onReady() {
-    const eggApp = new EggApplication({
-      env: this.app.getEnv(),
-      baseDir: this.app.getAppDir(),
-      mode: 'single',
-      plugins: this.eggPlugins,
-      allConfig: this.app.getConfig(),
-    });
+    const eggApp = this.getEggApplication();
     await eggApp.ready();
 
-    delegateProperty(this.app, eggApp),
+    delegateProperty(this.app, eggApp);
     delegateProperty(this.app.context, eggApp.context);
     delegateProperty(this.app.request, eggApp.request);
     delegateProperty(this.app.response, eggApp.response);
@@ -45,6 +42,17 @@ export class ContainerConfiguration {
         return !['bodyParser', 'dispatch'].includes(el.name);
       }));
     }
+  }
+
+  getEggApplication() {
+    return new EggApplication({
+      env: this.app.getEnv(),
+      baseDir: this.app.getAppDir(),
+      mode: 'single',
+      plugins: this.eggPlugins,
+      allConfig: this.app.getConfig(),
+      eggPaths: this.eggPaths,
+    });
   }
 }
 

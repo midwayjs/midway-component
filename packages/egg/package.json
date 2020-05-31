@@ -1,6 +1,6 @@
 {
   "name": "@midwayjs-component/egg",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
@@ -17,14 +17,13 @@
     "@midwayjs/faas": "^0.3.0",
     "@midwayjs/serverless-invoke": "^0.3.0",
     "@types/mocha": "^7.0.2",
-    "egg-mysql": "^3.0.0",
-    "midway-bin": "2"
+    "egg-mysql": "^3.0.0"
   },
   "license": "MIT",
   "scripts": {
     "build": "midway-bin build -c",
-    "test": "NODE_ENV=test midway-bin test --ts --full-trace",
-    "cov": "NODE_ENV=unittest midway-bin cov --ts",
+    "test": "NODE_ENV=test ../../node_modules/.bin/midway-bin test --ts --full-trace",
+    "cov": "NODE_ENV=unittest ../../node_modules/.bin/midway-bin cov --ts",
     "clean": "midway-bin clean",
     "autod": "midway-bin autod",
     "postinstall": "mcp autoconf"
