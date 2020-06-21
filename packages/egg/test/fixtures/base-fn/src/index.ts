@@ -13,6 +13,7 @@ export class IndexHandler implements FunctionHandler {
   @Func('index.handler')
   async handler() {
     assert(this.mysql);
+    (this.ctx as any).session['user'] = '123';
     return 'hello world';
   }
 }

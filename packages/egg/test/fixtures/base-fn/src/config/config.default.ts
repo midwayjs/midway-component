@@ -11,6 +11,7 @@ export default (appInfo) => {
     eggPaths:[
       join(appInfo.baseDir, '../../../../../../../')
     ],
-    middleware: ['bbb']
+    middleware: ['bbb'],
+    keys: 'bbbb'
   }
 }

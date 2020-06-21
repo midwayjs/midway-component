@@ -31,17 +31,12 @@ export class ContainerConfiguration {
     const eggApp = this.getEggApplication();
     await eggApp.ready();
 
-    delegateProperty(this.app, eggApp);
-    delegateProperty(this.app.context, eggApp.context);
-    delegateProperty(this.app.request, eggApp.request);
-    delegateProperty(this.app.response, eggApp.response);
+    cloneDeep(this.app, eggApp, this.getFilterPropertyList());
+    cloneDeep(this.app.context, eggApp.context);
+    cloneDeep(this.app.request, eggApp.request);
+    cloneDeep(this.app.response, eggApp.response);
 
-    // add middleware from egg middleware
-    if ((this.app as any)?.use && eggApp.middleware?.length) {
-      await (this.app as any).useMiddleware(eggApp.middleware.filter(el => {
-        return !['bodyParser', 'dispatch'].includes(el.name);
-      }));
-    }
+    await this.afterEggAppAssign(eggApp);
   }
 
   getEggApplication() {
@@ -54,34 +49,41 @@ export class ContainerConfiguration {
       eggPaths: this.eggPaths,
     });
   }
-}
 
-function delegateProperty(originalProto, proto) {
-  let properties: any[] = Object.getOwnPropertyNames(proto);
-  properties = properties.concat(Object.getOwnPropertySymbols(proto));
-
-  for (const property of properties) {
-    if(!originalProto.hasOwnProperty(property)) {
-      // Copy descriptor
-      let descriptor = Object.getOwnPropertyDescriptor(proto, property);
-      let originalDescriptor = Object.getOwnPropertyDescriptor(proto, property);
-      if (!originalDescriptor) {
-        // try to get descriptor from originalPrototypes
-        if (originalProto) {
-          originalDescriptor = Object.getOwnPropertyDescriptor(originalProto, property);
-        }
-      }
-      if (originalDescriptor) {
-        // don't override descriptor
-        descriptor = Object.assign({}, descriptor);
-        if (!descriptor.set && originalDescriptor.set) {
-          descriptor.set = originalDescriptor.set;
-        }
-        if (!descriptor.get && originalDescriptor.get) {
-          descriptor.get = originalDescriptor.get;
-        }
-      }
-      Object.defineProperty(originalProto, property, descriptor);
+  async afterEggAppAssign(eggApp) {
+    // add middleware from egg middleware
+    if ((this.app as any)?.use && eggApp.middleware?.length) {
+      await (this.app as any).useMiddleware(eggApp.middleware.filter(el => {
+        return !['bodyParser', 'dispatch'].includes(el.name);
+      }));
     }
   }
+
+  getFilterPropertyList() {
+    return ['req', 'request', 'res', 'response', 'context', 'callback'];
+  }
+}
+
+function completeAssign(target, source, filterProperty) {
+  let descriptors = Object.getOwnPropertyNames(source).reduce((descriptors, key) => {
+    if(!target.hasOwnProperty(key) && filterProperty.indexOf(key) === -1) {
+      descriptors[key] = Object.getOwnPropertyDescriptor(source, key)
+    }
+    return descriptors
+  }, {})
+
+  // Object.assign 默认也会拷贝可枚举的Symbols
+  Object.getOwnPropertySymbols(source).forEach(sym => {
+    let descriptor = Object.getOwnPropertyDescriptor(source, sym)
+    descriptors[sym] = descriptor
+  })
+  Object.defineProperties(target, descriptors)
+  return target;
+}
+
+function cloneDeep(target, source, filterProperty = []) {
+  let obj = source;
+  do {
+    completeAssign(target, obj, filterProperty)
+  } while (obj = Object.getPrototypeOf(obj));
 }
