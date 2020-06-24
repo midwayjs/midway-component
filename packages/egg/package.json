@@ -7,7 +7,8 @@
     "@midwayjs/component-postinstall": "1",
     "@midwayjs/decorator": "2",
     "@midwayjs/faas-typings": "^0.3.0",
-    "egg": "^2.25.0"
+    "egg": "^2.25.0",
+    "extend2": "^1.0.0"
   },
   "files": [
     "dist"

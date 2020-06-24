@@ -1,11 +1,9 @@
-import { Configuration, App, Config } from '@midwayjs/decorator';
+import { App, Config, Configuration } from '@midwayjs/decorator';
 import { IMidwayCoreApplication } from '@midwayjs/core';
-import {
-  FaaSHTTPResponse,
-  FaaSHTTPRequest,
-  FaaSHTTPContext,
-} from '@midwayjs/faas-typings';
+import { FaaSHTTPContext, FaaSHTTPRequest, FaaSHTTPResponse, } from '@midwayjs/faas-typings';
 import { EggApplication } from './application';
+import { join } from 'path';
+import * as extend from 'extend2';
 
 @Configuration({
   importConfigs: [
@@ -20,9 +18,6 @@ export class ContainerConfiguration {
     response: FaaSHTTPResponse;
     context: FaaSHTTPContext;
   };
-
-  @Config('eggPlugins')
-  eggPlugins;
 
   @Config('eggPaths')
   eggPaths;
@@ -40,11 +35,13 @@ export class ContainerConfiguration {
   }
 
   getEggApplication() {
+    // 由 midway 加载应用层面的配置和 plugin 配置
+    // 由 egg 去加载它本身的插件
     return new EggApplication({
       env: this.app.getEnv(),
       baseDir: this.app.getAppDir(),
       mode: 'single',
-      plugins: this.eggPlugins,
+      plugins: this.loadUserEggPlugin(),
       allConfig: this.app.getConfig(),
       eggPaths: this.eggPaths,
     });
@@ -62,6 +59,41 @@ export class ContainerConfiguration {
   getFilterPropertyList() {
     return ['req', 'request', 'res', 'response', 'context', 'callback'];
   }
+
+  loadUserEggPlugin() {
+    const baseDir = this.app.getBaseDir();
+    const currentEnv = this.app.getEnv();
+    const pluginConfigPaths = [];
+    let userPluginConfig = {};
+
+    pluginConfigPaths.push(join(baseDir, 'config/plugin.default'));
+    pluginConfigPaths.push(join(baseDir, 'config/plugin'));
+    pluginConfigPaths.push(join(baseDir, `config/plugin.${currentEnv}`));
+
+    for(const pluginConfigPath of pluginConfigPaths) {
+      try {
+        const pluginConfig = require(pluginConfigPath);
+        extend(userPluginConfig, formatPlugin(pluginConfig));
+      } catch (err) {
+        // ignore
+      }
+    }
+    return userPluginConfig;
+  }
+}
+
+function formatPlugin(userPluginConfig) {
+  if (userPluginConfig['default']) {
+    userPluginConfig = userPluginConfig['default'];
+  }
+  for (const key in userPluginConfig) {
+    if (typeof userPluginConfig[key ] === 'boolean') {
+      userPluginConfig[key] = {
+        enable: userPluginConfig[key]
+      }
+    }
+  }
+  return userPluginConfig;
 }
 
 function completeAssign(target, source, filterProperty) {
