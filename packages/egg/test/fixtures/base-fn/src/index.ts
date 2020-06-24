@@ -14,6 +14,7 @@ export class IndexHandler implements FunctionHandler {
   async handler() {
     assert(this.mysql);
     (this.ctx as any).session['user'] = '123';
+    console.log(this.ctx.ip);
     return 'hello world';
   }
 }
