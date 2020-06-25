@@ -4,6 +4,7 @@ import { FaaSHTTPContext, FaaSHTTPRequest, FaaSHTTPResponse, } from '@midwayjs/f
 import { EggApplication } from './application';
 import { join } from 'path';
 import * as extend from 'extend2';
+import { cloneDeep } from './util';
 
 @Configuration({
   importConfigs: [
@@ -26,11 +27,10 @@ export class ContainerConfiguration {
     const eggApp = this.getEggApplication();
     await eggApp.ready();
 
-    cloneDeep(this.app, eggApp, this.getFilterPropertyList());
-    cloneDeep(Object.getPrototypeOf(this.app.context), eggApp.context);
-    cloneDeep(Object.getPrototypeOf(this.app.request), eggApp.request);
-    cloneDeep(Object.getPrototypeOf(this.app.response), eggApp.response);
-
+    cloneDeep(this.app, eggApp, Object.keys(this.app).concat(this.getFilterPropertyList()));
+    cloneDeep(Object.getPrototypeOf(this.app.context), eggApp.context, Object.keys(this.app.context));
+    cloneDeep(Object.getPrototypeOf(this.app.request), eggApp.request, Object.keys(this.app.request));
+    cloneDeep(Object.getPrototypeOf(this.app.response), eggApp.response, Object.keys(this.app.response));
     await this.afterEggAppAssign(eggApp);
   }
 
@@ -94,28 +94,4 @@ function formatPlugin(userPluginConfig) {
     }
   }
   return userPluginConfig;
-}
-
-function completeAssign(target, source, filterProperty) {
-  let descriptors = Object.getOwnPropertyNames(source).reduce((descriptors, key) => {
-    if(!target.hasOwnProperty(key) && filterProperty.indexOf(key) === -1) {
-      descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
-    }
-    return descriptors;
-  }, {});
-
-  // Object.assign 默认也会拷贝可枚举的Symbols
-  Object.getOwnPropertySymbols(source).forEach(sym => {
-    let descriptor = Object.getOwnPropertyDescriptor(source, sym)
-    descriptors[sym] = descriptor;
-  })
-  Object.defineProperties(target, descriptors);
-  return target;
-}
-
-function cloneDeep(target, source, filterProperty = []) {
-  let obj = source;
-  do {
-    completeAssign(target, obj, filterProperty)
-  } while (obj = Object.getPrototypeOf(obj));
 }
