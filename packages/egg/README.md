@@ -9,19 +9,21 @@ npm i @midwayjs-component/egg --save
 
 ## Usage
 
-add egg plugin in `config.default.ts` or other env.
+add egg plugin in `plugin.ts` or other env.
 
-Tip: `eggPlugins` is equivalent to `plugins.js`
+```js
+// plugin.ts
+export default {
+  mysql: {
+    enable: true,
+    package: 'egg-mysql'
+  }
+},
+```
 
 ```js
 // config.default.ts
 {
-  eggPlugins: {
-    mysql: {
-      enable: true,
-      package: 'egg-mysql'
-    }
-  },
   mysql: {
     //... other config for mysql plugin
   }
