@@ -4,8 +4,6 @@
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@midwayjs/decorator": "2",
-    "@midwayjs/faas-typings": "^1.0.0",
     "extend2": "^1.0.0"
   },
   "files": [

@@ -18,6 +18,9 @@ export class ContainerConfiguration extends ParentConfiguration {
     context: FaaSHTTPContext;
   };
 
+  @Config('eggPaths')
+  eggPaths;
+
   getEggApplication() {
     // 由 midway 加载应用层面的配置和 plugin 配置
     // 由 egg 去加载它本身的插件

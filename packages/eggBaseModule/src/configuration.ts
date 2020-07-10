@@ -1,13 +1,10 @@
-import { App, Config } from '@midwayjs/decorator';
 import { cloneDeep } from './util';
 import { join } from 'path';
 import * as extend from 'extend2';
 
 export abstract class ParentConfiguration {
-  @App()
   app: any;
 
-  @Config('eggPaths')
   eggPaths;
 
   async onReady() {
