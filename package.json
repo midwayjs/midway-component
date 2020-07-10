@@ -5,7 +5,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/lodash": "^4.14.119",
-    "@types/mocha": "^5.2.5",
+    "@types/mocha": "^7.0.2",
     "@types/node": "^10.12.18",
     "lerna": "3",
     "mwts": "^1.0.5",

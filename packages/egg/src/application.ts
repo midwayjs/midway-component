@@ -1,28 +1,14 @@
 const { AppWorkerLoader, Application } = require('egg');
+import { createEggApplication, createAppWorkerLoader } from '@midwayjs/egg-base-module';
+
+const EggAppWorkerLoader = createAppWorkerLoader(AppWorkerLoader);
+
+const BaseEggApplication = createEggApplication(Application);
+
 const EGG_LOADER = Symbol.for('egg#loader');
 const EGG_PATH = Symbol.for('egg#eggPath');
 
-const extend = require('extend2');
-
-export class EggAppWorkerLoader extends (AppWorkerLoader as any) {
-
-  loadConfig() {
-    super.loadConfig();
-    this.afterLoadConfig();
-  }
-
-  afterLoadConfig() {
-    // mix config
-    extend(true, this.config, this.app.appOptions['allConfig']);
-  }
-
-  getEggPaths() {
-    const customEggPaths = this.app.appOptions['eggPaths']
-    return super.getEggPaths().concat(customEggPaths);
-  }
-}
-
-export class EggApplication extends (Application as any) {
+export class EggApplication extends BaseEggApplication {
 
   constructor(options) {
     super(options);
@@ -34,10 +20,6 @@ export class EggApplication extends (Application as any) {
 
   get [EGG_PATH]() {
     return __dirname;
-  }
-
-  get appOptions() {
-    return this.options;
   }
 
 }
