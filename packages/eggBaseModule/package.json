@@ -1,24 +1,18 @@
 {
-  "name": "@midwayjs-component/egg",
-  "version": "1.0.4",
+  "name": "@midwayjs/egg-base-module",
+  "version": "1.0.0",
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@midwayjs/component-postinstall": "1",
-    "@midwayjs/egg-base-module": "^1.0.0",
-    "@midwayjs/decorator": "2",
-    "@midwayjs/faas-typings": "^1.0.0",
-    "egg": "^2.25.0"
+    "extend2": "^1.0.0"
   },
   "files": [
     "dist"
   ],
   "devDependencies": {
+    "egg": "^2.25.0",
     "@midwayjs/core": "2",
-    "@midwayjs/faas": "^1.0.0",
-    "@midwayjs/serverless-invoke": "^1.0.0",
-    "@types/mocha": "^7.0.2",
-    "egg-mysql": "^3.0.0"
+    "@types/mocha": "^7.0.2"
   },
   "license": "MIT",
   "scripts": {
@@ -26,8 +20,7 @@
     "test": "NODE_ENV=test ../../node_modules/.bin/midway-bin test --ts --full-trace",
     "cov": "NODE_ENV=unittest ../../node_modules/.bin/midway-bin cov --ts",
     "clean": "midway-bin clean",
-    "autod": "midway-bin autod",
-    "postinstall": "mcp autoconf"
+    "autod": "midway-bin autod"
   },
   "repository": {
     "type": "git",
