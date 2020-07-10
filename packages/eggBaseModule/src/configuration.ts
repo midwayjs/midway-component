@@ -12,9 +12,9 @@ export abstract class ParentConfiguration {
     await eggApp.ready();
 
     cloneDeep(this.app, eggApp, Object.keys(this.app).concat(this.getFilterPropertyList()));
-    cloneDeep(Object.getPrototypeOf(this.app.context), eggApp.context, Object.keys(this.app.context));
-    cloneDeep(Object.getPrototypeOf(this.app.request), eggApp.request, Object.keys(this.app.request));
-    cloneDeep(Object.getPrototypeOf(this.app.response), eggApp.response, Object.keys(this.app.response));
+    cloneDeep(Object.getPrototypeOf(this.app.context), eggApp.context, Object.keys(Object.getPrototypeOf(this.app.context)));
+    cloneDeep(Object.getPrototypeOf(this.app.request), eggApp.request, Object.keys(Object.getPrototypeOf(this.app.request)));
+    cloneDeep(Object.getPrototypeOf(this.app.response), eggApp.response, Object.keys(Object.getPrototypeOf(this.app.response)));
 
     await this.afterEggAppAssign(eggApp);
   }
