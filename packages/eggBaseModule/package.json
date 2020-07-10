@@ -23,5 +23,9 @@
     "cov": "NODE_ENV=unittest ../../node_modules/.bin/midway-bin cov --ts",
     "clean": "midway-bin clean",
     "autod": "midway-bin autod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/midwayjs/midway-component.git"
   }
 }
