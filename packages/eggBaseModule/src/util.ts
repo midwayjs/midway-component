@@ -1,6 +1,7 @@
 export function completeAssign(target, source, blackList) {
   const descriptors = Object.getOwnPropertyNames(source).reduce((descriptors, key) => {
     if (!blackList.includes(key)) {
+      // Todo: unnessary check writable
       const targetDescriptor = Object.getOwnPropertyDescriptor(target, key);
       if (targetDescriptor && !targetDescriptor.writable) {
         return descriptors;
