@@ -1,6 +1,10 @@
 export function completeAssign(target, source, blackList) {
   const descriptors = Object.getOwnPropertyNames(source).reduce((descriptors, key) => {
     if (!blackList.includes(key)) {
+      const targetDescriptor = Object.getOwnPropertyDescriptor(target, key);
+      if (targetDescriptor && !targetDescriptor.writable) {
+        return descriptors;
+      }
       descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
     }
     return descriptors;
