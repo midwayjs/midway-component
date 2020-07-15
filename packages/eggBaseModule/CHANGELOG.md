@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.4](https://github.com/midwayjs/midway-component/compare/@midwayjs/egg-base-module@1.0.3...@midwayjs/egg-base-module@1.0.4) (2020-07-15)
+
+
+### Bug Fixes
+
+* configuable can change ([#7](https://github.com/midwayjs/midway-component/issues/7)) ([f4a646d](https://github.com/midwayjs/midway-component/commit/f4a646d5862f9703ab75524b14d77028a5a22f5c))
+
+
+
+
+
 ## [1.0.3](https://github.com/midwayjs/midway-component/compare/@midwayjs/egg-base-module@1.0.2...@midwayjs/egg-base-module@1.0.3) (2020-07-14)
 
 
