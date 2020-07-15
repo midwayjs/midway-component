@@ -4,7 +4,11 @@ export function completeAssign(target, source, blackList) {
       // Todo: unnessary check writable
       const targetDescriptor = Object.getOwnPropertyDescriptor(target, key);
       if (targetDescriptor && !targetDescriptor.writable) {
-        return descriptors;
+        if (!targetDescriptor.configurable) {
+          return descriptors;
+        } else {
+          Object.defineProperty(target, key, { writable: true });
+        }
       }
       descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
     }

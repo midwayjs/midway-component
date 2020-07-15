@@ -76,8 +76,7 @@ describe('/test/util.test.ts', () => {
     cloneDeep(origin, targetClassChild);
 
     assert.deepStrictEqual(origin.callback(), 'target child');
-    // Todo: should chan change?
-    assert.deepStrictEqual(origin.ip, '127.0.0.1');
+    assert.deepStrictEqual(origin.ip, '127.0.0.1:3000');
     assert.deepStrictEqual((origin as any).config, { a: 1, b: 2 });
 
 
