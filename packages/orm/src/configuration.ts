@@ -7,7 +7,7 @@ import { ENTITY_MODEL_KEY, EVENT_SUBSCRIBER_KEY, CONNECTION_KEY } from '.';
   importConfigs: [
     './config'
   ],
-  namespace: ''
+  namespace: 'orm'
 })
 export class OrmConfiguration implements ILifeCycle {
   @Config('orm')
@@ -20,7 +20,6 @@ export class OrmConfiguration implements ILifeCycle {
     const opts = this.orm;
     opts.entities = entities || [];
     opts.subscribers = eventSubs || [];
-    console.log('---a-sd-af', opts);
     const connection = await createConnection(opts);
     container.registerObject(CONNECTION_KEY, connection);
   }

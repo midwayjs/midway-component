@@ -1,4 +1,10 @@
-import { EntityOptions, getMetadataArgsStorage, ObjectType, EntitySchema, Repository } from 'typeorm';
+import { EntityOptions,
+  getMetadataArgsStorage,
+  ObjectType,
+  EntitySchema,
+  Repository,
+  TreeRepository,
+  MongoRepository } from 'typeorm';
 import { saveModule } from '@midwayjs/core';
 
 export const CONNECTION_KEY = 'orm_connection_instanace_key'
@@ -68,15 +74,15 @@ export type getRepository = <Entity>(target: ObjectType<Entity> | EntitySchema<E
  * Gets tree repository for the given entity class or name.
  * Only tree-type entities can have a TreeRepository, like ones decorated with @Tree decorator.
  */
-// export function getTreeRepository<Entity>(target: ObjectType<Entity> | EntitySchema<Entity> | string): TreeRepository<Entity>;
+export type getTreeRepository = <Entity>(target: ObjectType<Entity> | EntitySchema<Entity> | string) => TreeRepository<Entity>;
 /**
  * Gets mongodb-specific repository for the given entity class or name.
  * Works only if connection is mongodb-specific.
  */
-// getMongoRepository<Entity>(target: ObjectType<Entity> | EntitySchema<Entity> | string): MongoRepository<Entity>;
+export type getMongoRepository = <Entity>(target: ObjectType<Entity> | EntitySchema<Entity> | string) => MongoRepository<Entity>;
 /**
  * Gets custom entity repository marked with @EntityRepository decorator.
  */
-// getCustomRepository<T>(customRepository: ObjectType<T>): T;
+export type getCustomRepository = <T>(customRepository: ObjectType<T>) => T;
 
 export * from './repository';

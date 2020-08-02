@@ -1,9 +1,9 @@
 import { Configuration } from '@midwayjs/decorator';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 @Configuration({
   imports: [
-    join(__dirname, '../../../../src')
+    resolve(join(__dirname, '../../../../src'))
   ],
   importConfigs: [
     './config'
