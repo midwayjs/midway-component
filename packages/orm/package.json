@@ -17,6 +17,10 @@
     "@types/mocha": "^7.0.2",
     "sqlite3": "^5.0.0"
   },
+  "author": {
+    "name": "Kurten Chan",
+    "email": "chinkurten@gmail.com"
+  },
   "license": "MIT",
   "scripts": {
     "build": "../../node_modules/.bin/midway-bin build -c",
