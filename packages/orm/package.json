@@ -14,8 +14,8 @@
   ],
   "devDependencies": {
     "@midwayjs/core": "2",
-    "sqlite3": "^5.0.0",
-    "@types/mocha": "^7.0.2"
+    "@types/mocha": "^7.0.2",
+    "sqlite3": "^5.0.0"
   },
   "license": "MIT",
   "scripts": {

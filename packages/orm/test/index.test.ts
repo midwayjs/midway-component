@@ -12,6 +12,8 @@ describe.only('/test/index.test.ts', () => {
       clean: false
     });
     process.env.MIDWAY_TS_MODE = 'false';
-    assert(result && result.body === 'hello world');
+    console.log('result.body', result);
+    assert(result && result.body.indexOf('hello world') > -1);
+    assert(result.body === 'hello world[[{"id":1,"name":"oneuser1"}],1]');
   });
 });

@@ -4,13 +4,13 @@
   "version": "1.0.0",
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/lodash": "^4.14.119",
+    "@types/lodash": "^4.14.159",
     "@types/mocha": "^7.0.2",
     "@types/node": "^10.12.18",
     "lerna": "3",
+    "midway-bin": "2",
     "mwts": "^1.0.5",
-    "typescript": "^3.8.3",
-    "midway-bin": "2"
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "autod": "lerna run autod",

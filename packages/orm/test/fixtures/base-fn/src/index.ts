@@ -9,7 +9,7 @@ export class IndexHandler implements FunctionHandler {
   @Inject()
   ctx: FaaSContext;
 
-  @Inject('getRepository')
+  @Inject('orm:getRepository')
   getRepo: getRepository;
 
   @Func('index.handler')
@@ -19,7 +19,9 @@ export class IndexHandler implements FunctionHandler {
     u.name = 'oneuser1';
     const uu = await repo.save(u);
     console.log('user one id = ', uu.id);
-    const users = repo.find();
+    const user = new User();
+    user.id = 1;
+    const users = await repo.findAndCount(user);
     return 'hello world' + JSON.stringify(users);
   }
 }
