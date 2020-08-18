@@ -10,10 +10,10 @@
     "typeorm": "^0.2.25"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "devDependencies": {
-    "@midwayjs/core": "2",
     "@types/mocha": "^7.0.2",
     "sqlite3": "^5.0.0"
   },
@@ -27,7 +27,8 @@
     "test": "NODE_ENV=test ../../node_modules/.bin/midway-bin test --ts --full-trace",
     "cov": "NODE_ENV=unittest ../../node_modules/.bin/midway-bin cov --ts",
     "clean": "midway-bin clean",
-    "autod": "midway-bin autod"
+    "autod": "midway-bin autod",
+    "postinstall": "mcp autoconf"
   },
   "repository": {
     "type": "git",

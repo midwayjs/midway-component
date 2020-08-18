@@ -1,6 +1,6 @@
 {
-  "name": "@midwayjs-component/egg",
-  "version": "1.0.8",
+  "name": "@midwayjs/egg",
+  "version": "1.0.0",
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
@@ -11,7 +11,8 @@
     "egg": "^2.25.0"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "devDependencies": {
     "@midwayjs/core": "2",
