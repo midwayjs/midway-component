@@ -5,7 +5,7 @@ import { EntityOptions,
   Repository,
   TreeRepository,
   MongoRepository } from 'typeorm';
-import { saveModule } from '@midwayjs/core';
+import { saveModule, attachClassMetadata } from '@midwayjs/core';
 
 export const CONNECTION_KEY = 'orm_connection_instanace_key'
 export const ENTITY_MODEL_KEY = 'entity_model_key';
@@ -50,6 +50,16 @@ export function EntityModel(nameOrOptions?: string|EntityOptions, maybeOptions?:
     });
   }
 }
+
+export function InjectEntityModel(modelKey?: any) {
+  return (target, propertyKey: string) => {
+    attachClassMetadata('ORM_MODEL_KEY', {
+      key: modelKey,
+      propertyName: propertyKey,
+    }, target);
+  }
+}
+
 /**
  * EventSubscriber - typeorm
  * implements EntitySubscriberInterface
