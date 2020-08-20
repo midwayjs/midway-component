@@ -17,11 +17,11 @@ export class IndexHandler implements FunctionHandler {
 
   @Func('index.handler')
   async handler() {
-    // const repo: Repository<User> = this.getRepo(User);
-    // const u = new User();
-    // u.name = 'oneuser1';
-    // const uu = await repo.save(u);
-    // console.log('user one id = ', uu.id);
+    const repo: Repository<User> = this.getRepo(User);
+    const u = new User();
+    u.name = 'oneuser1';
+    const uu = await repo.save(u);
+    console.log('user one id = ', uu.id);
     const user = new User();
     user.id = 1;
 
