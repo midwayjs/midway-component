@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.1.0 (2020-08-21)
+
+
+### Bug Fixes
+
+* fix build ([4673ce3](https://github.com/midwayjs/midway-component/commit/4673ce309790d1c5a2664f9b3379626da48067cf))
+* fix egg config ([#1](https://github.com/midwayjs/midway-component/issues/1)) ([86ee583](https://github.com/midwayjs/midway-component/commit/86ee583ff4f8ab22c90e13a0a484851a8e712a1b))
+* fix proto copy ([#2](https://github.com/midwayjs/midway-component/issues/2)) ([0e76113](https://github.com/midwayjs/midway-component/commit/0e761136a294926b175931194dd91028f05f8c85))
+
+
+### Features
+
+* add orm component ([#8](https://github.com/midwayjs/midway-component/issues/8)) ([4fbfa94](https://github.com/midwayjs/midway-component/commit/4fbfa94b5d4dd7391a7f90b6daae9e5994437dac))
+
+
+
+
+
 ## [1.0.8](https://github.com/midwayjs/midway-component/compare/@midwayjs-component/egg@1.0.7...@midwayjs-component/egg@1.0.8) (2020-07-15)
 
 **Note:** Version bump only for package @midwayjs-component/egg

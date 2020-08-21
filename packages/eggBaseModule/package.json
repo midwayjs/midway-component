@@ -1,6 +1,6 @@
 {
   "name": "@midwayjs/egg-base-module",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
