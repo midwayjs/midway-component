@@ -1,13 +1,17 @@
-import { EntityOptions,
+import { 
+  EntityOptions,
   getMetadataArgsStorage,
   ObjectType,
   EntitySchema,
   Repository,
   TreeRepository,
-  MongoRepository } from 'typeorm';
-import { saveModule } from '@midwayjs/core';
+  MongoRepository, 
+  Connection,
+  getRepository
+} from 'typeorm';
+import { saveModule, attachClassMetadata } from '@midwayjs/core';
 
-export const CONNECTION_KEY = 'orm_connection_instanace_key'
+export const CONNECTION_KEY = 'orm:getConnection'
 export const ENTITY_MODEL_KEY = 'entity_model_key';
 export const EVENT_SUBSCRIBER_KEY = 'event_subscriber_key';
 /**
@@ -50,6 +54,19 @@ export function EntityModel(nameOrOptions?: string|EntityOptions, maybeOptions?:
     });
   }
 }
+
+export function InjectEntityModel(modelKey?: any, connectionName = 'default') {
+  return (target, propertyKey: string) => {
+    attachClassMetadata('ORM_MODEL_KEY', {
+      key: {
+        modelKey,
+        connectionName
+      },
+      propertyName: propertyKey,
+    }, target);
+  }
+}
+
 /**
  * EventSubscriber - typeorm
  * implements EntitySubscriberInterface
@@ -86,3 +103,14 @@ export type getMongoRepository = <Entity>(target: ObjectType<Entity> | EntitySch
 export type getCustomRepository = <T>(customRepository: ObjectType<T>) => T;
 
 export * from './repository';
+
+export type GetConnection = (instanceName?: string) => Connection;
+
+/**
+ * for hooks useEntityModel method
+ * @param clz
+ * @param instanceName 
+ */
+export function useEntityModel<Entity>(clz: ObjectType<Entity>, connectionName?: string): Repository<Entity> {
+  return getRepository<Entity>(clz, connectionName);
+}
