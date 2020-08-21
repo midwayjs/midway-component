@@ -1,11 +1,11 @@
 import { providerWrapper, IMidwayContainer } from '@midwayjs/core';
 import { Connection } from 'typeorm';
-import { CONNECTION_KEY } from '.';
+import { CONNECTION_KEY, GetConnection } from '.';
 
 export function getRepository(context: IMidwayContainer, args?: any) {
   return (clzz) => {
-    const connection = context.get<Connection>(CONNECTION_KEY);
-    return connection.getRepository(clzz);
+    const getConnection = context.get<GetConnection>(CONNECTION_KEY);
+    return getConnection().getRepository(clzz);
   };
 };
 

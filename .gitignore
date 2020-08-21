@@ -19,4 +19,4 @@ package-lock.json
 packages/midway/_package.json
 public
 .faas_debug_tmp
-test.sqlite
+*.sqlite
