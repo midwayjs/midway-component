@@ -4,7 +4,7 @@ import { InjectEntityModel } from '../../../../src';
 import { User } from './model/user';
 import { Repository } from 'typeorm';
 import * as assert from 'assert';
-import { BaseFnMultipleHook } from './hook';
+// import { BaseFnMultipleHook } from './hook';
 
 @Provide()
 export class IndexHandler implements FunctionHandler {
