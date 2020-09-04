@@ -14,6 +14,7 @@ import { saveModule, attachClassMetadata } from '@midwayjs/core';
 export const CONNECTION_KEY = 'orm:getConnection'
 export const ENTITY_MODEL_KEY = 'entity_model_key';
 export const EVENT_SUBSCRIBER_KEY = 'event_subscriber_key';
+export const ORM_MODEL_KEY = '__orm_model_key__';
 /**
  * Entity - typeorm
  * @param options EntityOptions
@@ -57,7 +58,7 @@ export function EntityModel(nameOrOptions?: string|EntityOptions, maybeOptions?:
 
 export function InjectEntityModel(modelKey?: any, connectionName = 'default') {
   return (target, propertyKey: string) => {
-    attachClassMetadata('ORM_MODEL_KEY', {
+    attachClassMetadata(ORM_MODEL_KEY, {
       key: {
         modelKey,
         connectionName
@@ -103,6 +104,7 @@ export type getMongoRepository = <Entity>(target: ObjectType<Entity> | EntitySch
 export type getCustomRepository = <T>(customRepository: ObjectType<T>) => T;
 
 export * from './repository';
+export * from './hook';
 
 export type GetConnection = (instanceName?: string) => Connection;
 
