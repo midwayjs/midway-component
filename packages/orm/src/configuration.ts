@@ -92,7 +92,6 @@ export class OrmConfiguration implements ILifeCycle {
       const inst: OrmConnectionHook = await container.getAsync(clzz);
       if (inst.beforeCreate && typeof inst.beforeCreate === 'function') {
         rt = await inst.beforeCreate(rt);
-        console.log('---asd-fa', inst);
       }
     }
     return rt;
