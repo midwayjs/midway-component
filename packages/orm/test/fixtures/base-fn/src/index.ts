@@ -4,6 +4,7 @@ import { getRepository, InjectEntityModel, useEntityModel } from '../../../../sr
 import { User } from './model/user';
 import { Repository } from 'typeorm';
 import * as assert  from 'assert';
+// import { BaseFnHook } from './hook';
 
 @Provide()
 export class IndexHandler implements FunctionHandler {
@@ -32,6 +33,12 @@ export class IndexHandler implements FunctionHandler {
     const newUsers = await userModel.findAndCount(user);
 
     assert.deepStrictEqual(users, newUsers);
+
+    const aa = await (this.ctx.requestContext as any).applicationContext.getAsync('baseFnHook');
+    assert.equal(aa.bcreate, 1);
+    assert.equal(aa.acreate, 1);
+    // assert.equal(aa.bclose, 1);
+    // assert.equal(aa.aclose, 1);
 
     return 'hello world' + JSON.stringify(users);
   }
