@@ -3,7 +3,7 @@ const EGG_PATH = Symbol.for('egg#eggPath');
 
 const extend = require('extend2');
 
-export const createAppWorkerLoader = (AppWorkerLoader) => {
+export const createAppWorkerLoader = AppWorkerLoader => {
   class EggAppWorkerLoader extends (AppWorkerLoader as any) {
     loadConfig() {
       super.loadConfig();
@@ -22,12 +22,12 @@ export const createAppWorkerLoader = (AppWorkerLoader) => {
   }
 
   return EggAppWorkerLoader as any;
-}
+};
 
-export const createEggApplication = (Application) => {
+export const createEggApplication = Application => {
   class EggApplication extends (Application as any) {
-
     constructor(options) {
+      // eslint-disable-next-line constructor-super
       super(options);
     }
 
@@ -45,4 +45,4 @@ export const createEggApplication = (Application) => {
   }
 
   return EggApplication as any;
-}
+};

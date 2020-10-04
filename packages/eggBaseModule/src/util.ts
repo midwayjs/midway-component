@@ -1,24 +1,27 @@
 export function completeAssign(target, source, blackList) {
-  const descriptors = Object.getOwnPropertyNames(source).reduce((descriptors, key) => {
-    if (!blackList.includes(key)) {
-      // Todo: unnessary check writable
-      const targetDescriptor = Object.getOwnPropertyDescriptor(target, key);
-      if (targetDescriptor && !targetDescriptor.writable) {
-        if (!targetDescriptor.configurable) {
-          return descriptors;
-        } else {
-          Object.defineProperty(target, key, { writable: true });
+  const descriptors = Object.getOwnPropertyNames(source).reduce(
+    (descriptors, key) => {
+      if (!blackList.includes(key)) {
+        // Todo: unnessary check writable
+        const targetDescriptor = Object.getOwnPropertyDescriptor(target, key);
+        if (targetDescriptor && !targetDescriptor.writable) {
+          if (!targetDescriptor.configurable) {
+            return descriptors;
+          } else {
+            Object.defineProperty(target, key, { writable: true });
+          }
         }
+        descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
       }
-      descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
-    }
-    return descriptors;
-  }, {});
+      return descriptors;
+    },
+    {}
+  );
 
   // Object.assign 默认也会拷贝可枚举的Symbols
   Object.getOwnPropertySymbols(source).forEach(sym => {
     if (!Object.getOwnPropertyDescriptor(target, sym)) {
-      const descriptor = Object.getOwnPropertyDescriptor(source, sym)
+      const descriptor = Object.getOwnPropertyDescriptor(source, sym);
       descriptors[sym] = descriptor;
     }
   });
@@ -29,6 +32,7 @@ export function completeAssign(target, source, blackList) {
 export function cloneDeep(target, source, blackList = []) {
   const obj = source;
 
+  // eslint-disable-next-line eqeqeq
   if (Object.getPrototypeOf(obj) && Object.getPrototypeOf(obj) != Object) {
     cloneDeep(target, Object.getPrototypeOf(obj), blackList);
     completeAssign(target, obj, blackList);
@@ -45,13 +49,13 @@ export function getAllPropertyNames(obj) {
   const props = [];
 
   do {
-    Object.getOwnPropertyNames(obj).forEach(function (prop) {
+    Object.getOwnPropertyNames(obj).forEach(prop => {
       if (props.indexOf(prop) === -1) {
         props.push(prop);
       }
     });
     // tslint:disable-next-line:no-conditional-assignment
-  } while (obj = Object.getPrototypeOf(obj));
+  } while ((obj = Object.getPrototypeOf(obj)));
 
   return props;
 }

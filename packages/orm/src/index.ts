@@ -1,17 +1,17 @@
-import { 
+import {
   EntityOptions,
   getMetadataArgsStorage,
   ObjectType,
   EntitySchema,
   Repository,
   TreeRepository,
-  MongoRepository, 
+  MongoRepository,
   Connection,
-  getRepository
+  getRepository,
 } from 'typeorm';
 import { saveModule, attachClassMetadata } from '@midwayjs/core';
 
-export const CONNECTION_KEY = 'orm:getConnection'
+export const CONNECTION_KEY = 'orm:getConnection';
 export const ENTITY_MODEL_KEY = 'entity_model_key';
 export const EVENT_SUBSCRIBER_KEY = 'event_subscriber_key';
 export const ORM_MODEL_KEY = '__orm_model_key__';
@@ -25,15 +25,24 @@ export function EntityModel(options?: EntityOptions): ClassDecorator;
  * @param name string
  * @param options EntityOptions
  */
-export function EntityModel(name?: string, options?: EntityOptions): ClassDecorator;
+export function EntityModel(
+  name?: string,
+  options?: EntityOptions
+): ClassDecorator;
 /**
  * Entity - typeorm
  * @param nameOrOptions string|EntityOptions
  * @param maybeOptions EntityOptions
  */
-export function EntityModel(nameOrOptions?: string|EntityOptions, maybeOptions?: EntityOptions): ClassDecorator {
-  const options = (typeof nameOrOptions === "object" ? nameOrOptions as EntityOptions : maybeOptions) || {};
-  const name = typeof nameOrOptions === "string" ? nameOrOptions : options.name;
+export function EntityModel(
+  nameOrOptions?: string | EntityOptions,
+  maybeOptions?: EntityOptions
+): ClassDecorator {
+  const options =
+    (typeof nameOrOptions === 'object'
+      ? (nameOrOptions as EntityOptions)
+      : maybeOptions) || {};
+  const name = typeof nameOrOptions === 'string' ? nameOrOptions : options.name;
 
   return function (target) {
     if (typeof target === 'function') {
@@ -45,27 +54,31 @@ export function EntityModel(nameOrOptions?: string|EntityOptions, maybeOptions?:
     getMetadataArgsStorage().tables.push({
       target: target,
       name: name,
-      type: "regular",
+      type: 'regular',
       orderBy: options.orderBy ? options.orderBy : undefined,
       engine: options.engine ? options.engine : undefined,
       database: options.database ? options.database : undefined,
       schema: options.schema ? options.schema : undefined,
       synchronize: options.synchronize,
-      withoutRowid: options.withoutRowid
+      withoutRowid: options.withoutRowid,
     });
-  }
+  };
 }
 
 export function InjectEntityModel(modelKey?: any, connectionName = 'default') {
   return (target, propertyKey: string) => {
-    attachClassMetadata(ORM_MODEL_KEY, {
-      key: {
-        modelKey,
-        connectionName
+    attachClassMetadata(
+      ORM_MODEL_KEY,
+      {
+        key: {
+          modelKey,
+          connectionName,
+        },
+        propertyName: propertyKey,
       },
-      propertyName: propertyKey,
-    }, target);
-  }
+      target
+    );
+  };
 }
 
 /**
@@ -81,23 +94,29 @@ export function EventSubscriberModel(): ClassDecorator {
     }
 
     getMetadataArgsStorage().entitySubscribers.push({ target });
-  }
+  };
 }
 
 /**
  * Gets repository for the given entity.
  */
-export type getRepository = <Entity>(target: ObjectType<Entity> | EntitySchema<Entity> | string) => Repository<Entity>;
+export type getRepository = <Entity>(
+  target: ObjectType<Entity> | EntitySchema<Entity> | string
+) => Repository<Entity>;
 /**
  * Gets tree repository for the given entity class or name.
  * Only tree-type entities can have a TreeRepository, like ones decorated with @Tree decorator.
  */
-export type getTreeRepository = <Entity>(target: ObjectType<Entity> | EntitySchema<Entity> | string) => TreeRepository<Entity>;
+export type getTreeRepository = <Entity>(
+  target: ObjectType<Entity> | EntitySchema<Entity> | string
+) => TreeRepository<Entity>;
 /**
  * Gets mongodb-specific repository for the given entity class or name.
  * Works only if connection is mongodb-specific.
  */
-export type getMongoRepository = <Entity>(target: ObjectType<Entity> | EntitySchema<Entity> | string) => MongoRepository<Entity>;
+export type getMongoRepository = <Entity>(
+  target: ObjectType<Entity> | EntitySchema<Entity> | string
+) => MongoRepository<Entity>;
 /**
  * Gets custom entity repository marked with @EntityRepository decorator.
  */
@@ -111,8 +130,11 @@ export type GetConnection = (instanceName?: string) => Connection;
 /**
  * for hooks useEntityModel method
  * @param clz
- * @param instanceName 
+ * @param instanceName
  */
-export function useEntityModel<Entity>(clz: ObjectType<Entity>, connectionName?: string): Repository<Entity> {
+export function useEntityModel<Entity>(
+  clz: ObjectType<Entity>,
+  connectionName?: string
+): Repository<Entity> {
   return getRepository<Entity>(clz, connectionName);
 }

@@ -1,16 +1,17 @@
 import { App, Config, Configuration } from '@midwayjs/decorator';
 import { IMidwayCoreApplication } from '@midwayjs/core';
-import { FaaSHTTPContext, FaaSHTTPRequest, FaaSHTTPResponse } from '@midwayjs/faas-typings';
+import {
+  FaaSHTTPContext,
+  FaaSHTTPRequest,
+  FaaSHTTPResponse,
+} from '@midwayjs/faas-typings';
 import { EggApplication } from './application';
 import { ParentConfiguration } from '@midwayjs/egg-base-module';
 
 @Configuration({
-  importConfigs: [
-    './config'
-  ]
+  importConfigs: ['./config'],
 })
 export class ContainerConfiguration extends ParentConfiguration {
-
   @App()
   app: IMidwayCoreApplication & {
     request: FaaSHTTPRequest;
@@ -33,5 +34,4 @@ export class ContainerConfiguration extends ParentConfiguration {
       eggPaths: this.eggPaths,
     });
   }
-
 }
