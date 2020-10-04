@@ -10,7 +10,13 @@
         "--no-package-lock"
       ],
       "nohoist": [
-        "egg"
+        "egg",
+        "@midwayjs/core",
+        "@midwayjs/decorator",
+        "@midwayjs/mock",
+        "@midwayjs/web",
+        "@midwayjs/koa",
+        "@midwayjs/express"
       ]
     },
     "publish": {
