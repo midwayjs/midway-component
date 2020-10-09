@@ -1,4 +1,4 @@
-import { Controller, Get, Provide, RequestPath } from '@midwayjs/decorator';
+import { Controller, Get, Param, Provide, RequestPath } from '@midwayjs/decorator';
 import { getAbsoluteFSPath } from 'swagger-ui-dist';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -6,19 +6,28 @@ import { join } from 'path';
 const swaggerUiAssetPath = getAbsoluteFSPath();
 
 @Provide()
-@Controller('/swagger-ui')
+@Controller('/swagger')
 export class SwaggerController {
   @Get('/json')
-  async renderJSON() {}
+  async renderJSON() {
+    return 'hello world';
+  }
 
-  @Get('/*')
-  async renderSwagger(@RequestPath() requestPath) {
-    console.log('///', requestPath);
-    if (requestPath === '/') {
-      requestPath = '/index.html';
+  @Get('/ui')
+  @Get('/ui/:fileName')
+  async renderSwagger(@RequestPath() requestPath, @Param() fileName) {
+    if (fileName) {
+      requestPath = fileName;
+    } else {
+      requestPath = requestPath.replace('/swagger/ui', '/');
+      if (requestPath === '/') {
+        requestPath = '/index.html';
+      }
     }
-    return readFileSync(join(swaggerUiAssetPath, requestPath), {
-      encoding: 'utf8',
-    }).toString();
+    return this.getSwaggerUIResource(requestPath);
+  }
+
+  getSwaggerUIResource(requestPath) {
+    return readFileSync(join(swaggerUiAssetPath, requestPath));
   }
 }

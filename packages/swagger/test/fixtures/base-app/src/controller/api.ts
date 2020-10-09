@@ -26,7 +26,7 @@ export class APIController {
     return 'data';
   }
 
-  @Get('/', { middleware: [] })
+  @Get('/', { middleware: []})
   @HttpCode(201)
   async home(@Query() name: string, @Query() age: number) {
     return 'hello world,' + name + age;

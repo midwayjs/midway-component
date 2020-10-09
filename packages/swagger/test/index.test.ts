@@ -14,14 +14,18 @@ describe('/test/feature.test.ts', () => {
     });
 
     it('test get method with return value', async () => {
-      const result = await createHttpRequest(app).get('/').query({ name: 'harry', age: 18 });
-      expect(result.status).toBe(201);
-      expect(result.text).toBe('hello world,harry18');
+      const result = await createHttpRequest(app).get('/swagger/ui');
+      expect(result.body.toString()).toMatch('<title>Swagger UI</title>');
     });
 
-    it('test get method with redirect', async () => {
-      const result = await createHttpRequest(app).get('/login');
-      expect(result.status).toBe(302);
+    it('should get css', async () => {
+      const result = await createHttpRequest(app).get('/swagger/ui/swagger-ui.css');
+      expect(result.body.toString()).toMatch('.swagger-ui');
+    });
+
+    it('should get swagger json', async () => {
+      const result = await createHttpRequest(app).get('/swagger/json');
+      expect(result.text).toMatch('hello world');
     });
   });
 
