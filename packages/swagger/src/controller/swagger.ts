@@ -15,7 +15,7 @@ export class SwaggerController {
 
   @Get('/ui')
   @Get('/ui/:fileName')
-  async renderSwagger(@RequestPath() requestPath, @Param() fileName) {
+  async renderSwagger(@RequestPath() requestPath: string, @Param() fileName?: string) {
     if (fileName) {
       requestPath = fileName;
     } else {

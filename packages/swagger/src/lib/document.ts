@@ -3,14 +3,14 @@ function arrayToJSON(arr) {
   return arr.map(el => el.toJSON());
 }
 
-function arrayToObject(arr, objectKey: string) {
-  if (!arr) return;
-  const o = {};
-  arr.forEach(el => {
-    o[el[objectKey]] = el.toJSON();
-  });
-  return o;
-}
+// function arrayToObject(arr, objectKey: string) {
+//   if (!arr) return;
+//   const o = {};
+//   arr.forEach(el => {
+//     o[el[objectKey]] = el.toJSON();
+//   });
+//   return o;
+// }
 
 export class SwaggerDocument {
   info: SwaggerDocumentInfo;
@@ -18,13 +18,13 @@ export class SwaggerDocument {
   basePath: string;
   tags: SwaggerDocumentTag[];
   schemes: string[];
-  paths: SwaggerDocumentRouter[];
+  paths: SwaggerDocumentPaths;
 
   addRouter(router: SwaggerDocumentRouter) {
     if (!this.paths) {
-      this.paths = [];
+      this.paths = new SwaggerDocumentPaths();
     }
-    this.paths.push(router);
+    this.paths.routers.push(router);
   }
 
   toJSON() {
@@ -35,7 +35,7 @@ export class SwaggerDocument {
       basePath: this.basePath,
       tags: arrayToJSON(this.tags),
       schemas: this.schemes,
-      paths: arrayToObject(this.paths, 'url'),
+      paths: this.paths.toJSON(),
     };
   }
 }
@@ -66,6 +66,21 @@ export class SwaggerDocumentTag {
   }
 }
 
+export class SwaggerDocumentPaths {
+  routers: SwaggerDocumentRouter[] = [];
+
+  toJSON() {
+    const routers = {};
+    for (const router of this.routers) {
+      if (!routers[router.url]) {
+        routers[router.url] = {};
+      }
+      routers[router.url][router.method] = router.toJSON();
+    }
+    return routers;
+  }
+}
+
 export class SwaggerDocumentRouter {
   method: 'get' | 'post' | 'put' | 'delete' | 'options' | 'head' | 'patch';
   url: string;
@@ -85,8 +100,7 @@ export class SwaggerDocumentRouter {
   }
 
   toJSON() {
-    const router = {};
-    router[this.method] = {
+    return {
       tags: this.tags,
       summary: this.summary,
       description: this.description,
@@ -94,8 +108,8 @@ export class SwaggerDocumentRouter {
       consumes: this.consumes,
       produces: this.produces,
       parameters: arrayToJSON(this.parameters),
+      responses: this.responses,
     };
-    return router;
   }
 }
 
@@ -104,6 +118,7 @@ export class SwaggerDocumentParameter {
   name: string;
   description: string;
   required: boolean;
+  schema;
 
   toJSON() {
     return {
@@ -111,6 +126,7 @@ export class SwaggerDocumentParameter {
       name: this.name,
       description: this.description,
       required: this.required,
+      schema: this.schema,
     };
   }
 }
