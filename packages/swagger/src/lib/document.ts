@@ -20,10 +20,12 @@ export class SwaggerDocument {
   schemes: string[];
   paths: SwaggerDocumentPaths;
 
+  constructor() {
+    this.tags = [];
+    this.paths = new SwaggerDocumentPaths();
+  }
+
   addRouter(router: SwaggerDocumentRouter) {
-    if (!this.paths) {
-      this.paths = new SwaggerDocumentPaths();
-    }
     this.paths.routers.push(router);
   }
 

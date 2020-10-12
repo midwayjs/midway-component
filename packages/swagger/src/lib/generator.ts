@@ -9,11 +9,14 @@ import {
   WEB_ROUTER_PARAM_KEY,
   RouteParamTypes,
   getMethodParamTypes,
+  isClass,
 } from '@midwayjs/decorator';
 import {
-  SwaggerDocument, SwaggerDocumentInfo,
+  SwaggerDocument,
+  SwaggerDocumentInfo,
   SwaggerDocumentParameter,
   SwaggerDocumentRouter,
+  SwaggerDocumentTag,
 } from './document';
 
 export class SwaggerMetaGenerator {
@@ -22,8 +25,8 @@ export class SwaggerMetaGenerator {
   constructor() {
     this.document = new SwaggerDocument();
     const info = new SwaggerDocumentInfo();
-    info.title = 'midway2 swagger api';
-    info.version = '1.0.0'
+    info.title = 'Midway2 Swagger API';
+    info.version = '1.0.0';
     this.document.info = info;
   }
 
@@ -34,8 +37,16 @@ export class SwaggerMetaGenerator {
     );
 
     const prefix = controllerOption.prefix;
+    const tag = new SwaggerDocumentTag();
+    if (prefix !== '/') {
+      tag.name = /^\//.test(prefix) ? prefix.split('/')[1] : prefix;
+      tag.description = tag.name;
+    } else {
+      tag.name = 'default';
+      tag.description = tag.name;
+    }
+    this.document.tags.push(tag);
     // const globalMiddleware = controllerOption.routerOptions.middleware;
-
     // get router info
     const webRouterInfo: RouterOption[] = getClassMetadata(
       WEB_ROUTER_KEY,
@@ -44,8 +55,9 @@ export class SwaggerMetaGenerator {
 
     for (const webRouter of webRouterInfo) {
       let url = (prefix + webRouter.path).replace('//', '/');
-      url = replaceUrl(url, parseParamsInPath(url))
+      url = replaceUrl(url, parseParamsInPath(url));
       const router = new SwaggerDocumentRouter(webRouter.requestMethod, url);
+      router.tags = [tag.name];
       this.generateRouter(webRouter, router, module);
       this.document.addRouter(router);
     }
@@ -75,19 +87,23 @@ export class SwaggerMetaGenerator {
       const swaggerParameter = new SwaggerDocumentParameter();
 
       swaggerParameter.name = routeArgs.propertyData;
-      swaggerParameter.in = convertTypeToString(routeArgs.type)
+      swaggerParameter.in = convertTypeToString(routeArgs.type);
       if (swaggerParameter.in === 'path') {
         swaggerParameter.required = true;
 
         // if path not include this args, must be ignore
-        if (swaggerRouter.url.indexOf('{' + swaggerParameter.name + '}') === -1) {
+        if (
+          swaggerRouter.url.indexOf('{' + swaggerParameter.name + '}') === -1
+        ) {
           continue;
         }
       }
       swaggerParameter.schema = {
-        type: convertSchemaType(paramTypes[routeArgs.index].name),
+        type: !isClass(paramTypes[routeArgs.index])
+          ? convertSchemaType(paramTypes[routeArgs.index].name)
+          : paramTypes[routeArgs.index].name,
         name: undefined,
-      }
+      };
 
       // add parameter
       swaggerRouter.parameters.push(swaggerParameter);
@@ -95,8 +111,8 @@ export class SwaggerMetaGenerator {
 
     swaggerRouter.responses = {
       200: {
-        description: ''
-      }
+        description: '',
+      },
     };
   }
 }
@@ -114,20 +130,19 @@ function convertTypeToString(type: RouteParamTypes) {
   }
 }
 
-
 /**
  * 解释路由上的参数
  * @param url
  */
 function parseParamsInPath(url: string) {
-  const names: string[] = []
+  const names: string[] = [];
   url.split('/').forEach((item) => {
     if (item.startsWith(':')) {
-      const paramName = item.substr(1)
-      names.push(paramName)
+      const paramName = item.substr(1);
+      names.push(paramName);
     }
-  })
-  return names
+  });
+  return names;
 }
 
 /**
@@ -136,10 +151,10 @@ function parseParamsInPath(url: string) {
  * @param names
  */
 function replaceUrl(url: string, names: string[]) {
-  names.forEach((n) => {
-    url = url.replace(`:${n}`, `{${n}}`)
-  })
-  return url
+  names.forEach(n => {
+    url = url.replace(`:${n}`, `{${n}}`);
+  });
+  return url;
 }
 
 function convertSchemaType(value) {
