@@ -24,6 +24,39 @@ export class UserDTO {
   age: number;
 }
 
+class SwaggerAPI {
+  summary(summary: string) {
+    return this;
+  }
+
+  description(desc: string) {
+    return this;
+  }
+
+  addParameter(summary: string, description?: string) {
+    return this;
+  }
+
+  addReturn(status: number, result) {
+    return this;
+  }
+
+  example(example: any) {
+    return this;
+  }
+
+  build() {
+    return (target: any, property: string) => {
+
+    }
+  }
+}
+
+function CreateAPI() {
+  return new SwaggerAPI();
+}
+
+
 @Provide()
 @Controller('/user')
 export class UserController {
@@ -34,9 +67,16 @@ export class UserController {
   @Inject()
   userService: UserService;
 
-
+  @CreateAPI()
+    .summary('获取用户')
+    .description('这是一个完整的获取用户的接口')
+    .addParameter('用户 id')
+    .example(require('./example/user'))
+    .addReturn(200, UserDTO)
+    .addReturn(500, Error)
+    .build()
   @Get('/:userId')
-  async getUser(@Param() userId: number): Promise<UserDTO> {
+  async getUser(@Param() userId: number) {
     return {
       name: 'harry',
       age: 18
