@@ -42,7 +42,7 @@ export class SwaggerDocument {
       paths: this.paths.toJSON(),
       components: {
         schemas: arrayToObject(this.definitions, 'name'),
-      }
+      },
     };
   }
 }
@@ -98,7 +98,8 @@ export class SwaggerDocumentRouter {
   consumes: string[];
   produces: string[];
   parameters: SwaggerDocumentParameter[];
-  responses: {};
+  requestBody: object;
+  responses: object;
   security: [];
 
   constructor(method, url) {
@@ -115,6 +116,7 @@ export class SwaggerDocumentRouter {
       consumes: this.consumes,
       produces: this.produces,
       parameters: arrayToJSON(this.parameters),
+      requestBody: this.requestBody,
       responses: this.responses,
     };
   }
@@ -150,7 +152,7 @@ export class SwaggerDefinition {
   toJSON() {
     return {
       type: this.type,
-      properties: this.properties
+      properties: this.properties,
     };
   }
 }

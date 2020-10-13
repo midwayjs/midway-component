@@ -2,17 +2,17 @@ import {
   CONTROLLER_KEY,
   ControllerOption,
   getClassMetadata,
-  getPropertyDataFromClass,
-  RouterOption,
-  RouterParamValue,
-  WEB_ROUTER_KEY,
-  WEB_ROUTER_PARAM_KEY,
-  RouteParamTypes,
   getMethodParamTypes,
+  getParamNames,
+  getPropertyDataFromClass,
   getPropertyType,
   isClass,
+  RouteParamTypes,
+  RouterOption,
+  RouterParamValue,
   RULES_KEY,
-  getParamNames,
+  WEB_ROUTER_KEY,
+  WEB_ROUTER_PARAM_KEY,
 } from '@midwayjs/decorator';
 import {
   SwaggerDefinition,
@@ -86,7 +86,6 @@ export class SwaggerMetaGenerator {
         webRouterInfo.method
       ) || [];
 
-
     const ins = new module();
 
     // 获取方法参数名
@@ -112,19 +111,33 @@ export class SwaggerMetaGenerator {
       if (isClass(paramTypes[routeArgs.index])) {
         this.generateSwaggerDefinition(paramTypes[routeArgs.index]);
         swaggerParameter.schema = {
-          '$ref': '#/components/schemas/' + paramTypes[routeArgs.index].name,
-        }
+          $ref: '#/components/schemas/' + paramTypes[routeArgs.index].name,
+        };
       } else {
         swaggerParameter.schema = {
           type: convertSchemaType(paramTypes[routeArgs.index].name),
           name: undefined,
-        }
+        };
+      }
+
+      // add body
+      if (swaggerParameter.in === 'body') {
+        swaggerRouter.requestBody = {
+          description: argsNames[routeArgs.index],
+          content: {
+            'application/json': {
+              schema: swaggerParameter.schema,
+            },
+          },
+        };
+        continue;
       }
 
       // add parameter
       swaggerRouter.parameters.push(swaggerParameter);
     }
 
+    // 获取方法返回值
     swaggerRouter.responses = {
       200: {
         description: '',
@@ -141,11 +154,11 @@ export class SwaggerMetaGenerator {
     const rules = getClassMetadata(RULES_KEY, definitionClass);
     if (rules) {
       const properties = Object.keys(rules);
-      for (let property of properties) {
+      for (const property of properties) {
         const type = getPropertyType(target, property);
         swaggerDefinition.properties[property] = {
-          type: convertSchemaType(type.name)
-        }
+          type: convertSchemaType(type.name),
+        };
       }
     }
 
@@ -161,6 +174,8 @@ function convertTypeToString(type: RouteParamTypes) {
       return 'query';
     case RouteParamTypes.PARAM:
       return 'path';
+    case RouteParamTypes.BODY:
+      return 'body';
     default:
       return 'header';
   }
@@ -172,7 +187,7 @@ function convertTypeToString(type: RouteParamTypes) {
  */
 function parseParamsInPath(url: string) {
   const names: string[] = [];
-  url.split('/').forEach((item) => {
+  url.split('/').forEach(item => {
     if (item.startsWith(':')) {
       const paramName = item.substr(1);
       names.push(paramName);
@@ -199,8 +214,6 @@ function convertSchemaType(value) {
       return 'object';
     case 'Boolean':
       return 'boolean';
-    case 'Interger':
-      return 'interger';
     case 'Number':
       return 'number';
     case 'String':

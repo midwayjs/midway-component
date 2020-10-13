@@ -1,4 +1,10 @@
-import { Controller, Get, Param, Provide, RequestPath } from '@midwayjs/decorator';
+import {
+  Controller,
+  Get,
+  Param,
+  Provide,
+  RequestPath,
+} from '@midwayjs/decorator';
 import { getAbsoluteFSPath } from 'swagger-ui-dist';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -15,7 +21,10 @@ export class SwaggerController {
 
   @Get('/ui')
   @Get('/ui/:fileName')
-  async renderSwagger(@RequestPath() requestPath: string, @Param() fileName?: string) {
+  async renderSwagger(
+    @RequestPath() requestPath: string,
+    @Param() fileName?: string
+  ) {
     if (fileName) {
       requestPath = fileName;
     } else {

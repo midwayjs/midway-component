@@ -1,6 +1,7 @@
 import { Configuration, CONTROLLER_KEY, listModule } from '@midwayjs/decorator';
 import { join } from 'path';
 import { SwaggerMetaGenerator } from './lib/generator';
+import { SwaggerController } from './controller/swagger';
 
 @Configuration({
   namespace: 'swagger',
@@ -12,7 +13,9 @@ export class AutoConfiguration {
     const generator = new SwaggerMetaGenerator();
 
     for (const module of controllerModules) {
-      generator.generateController(module);
+      if (module !== SwaggerController) {
+        generator.generateController(module);
+      }
     }
 
     console.log(JSON.stringify(generator.generate()));
