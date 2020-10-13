@@ -3,14 +3,14 @@ function arrayToJSON(arr) {
   return arr.map(el => el.toJSON());
 }
 
-// function arrayToObject(arr, objectKey: string) {
-//   if (!arr) return;
-//   const o = {};
-//   arr.forEach(el => {
-//     o[el[objectKey]] = el.toJSON();
-//   });
-//   return o;
-// }
+function arrayToObject(arr, objectKey: string) {
+  if (!arr) return;
+  const o = {};
+  arr.forEach(el => {
+    o[el[objectKey]] = el.toJSON();
+  });
+  return o;
+}
 
 export class SwaggerDocument {
   info: SwaggerDocumentInfo;
@@ -19,10 +19,12 @@ export class SwaggerDocument {
   tags: SwaggerDocumentTag[];
   schemes: string[];
   paths: SwaggerDocumentPaths;
+  definitions: SwaggerDefinition[];
 
   constructor() {
     this.tags = [];
     this.paths = new SwaggerDocumentPaths();
+    this.definitions = [];
   }
 
   addRouter(router: SwaggerDocumentRouter) {
@@ -38,6 +40,9 @@ export class SwaggerDocument {
       tags: arrayToJSON(this.tags),
       schemas: this.schemes,
       paths: this.paths.toJSON(),
+      components: {
+        schemas: arrayToObject(this.definitions, 'name'),
+      }
     };
   }
 }
@@ -129,6 +134,23 @@ export class SwaggerDocumentParameter {
       description: this.description,
       required: this.required,
       schema: this.schema,
+    };
+  }
+}
+
+export class SwaggerDefinition {
+  name: string;
+  type: string;
+  properties;
+
+  constructor() {
+    this.properties = {};
+  }
+
+  toJSON() {
+    return {
+      type: this.type,
+      properties: this.properties
     };
   }
 }

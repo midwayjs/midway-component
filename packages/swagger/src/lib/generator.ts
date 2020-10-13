@@ -9,9 +9,13 @@ import {
   WEB_ROUTER_PARAM_KEY,
   RouteParamTypes,
   getMethodParamTypes,
+  getPropertyType,
   isClass,
+  RULES_KEY,
+  getParamNames,
 } from '@midwayjs/decorator';
 import {
+  SwaggerDefinition,
   SwaggerDocument,
   SwaggerDocumentInfo,
   SwaggerDocumentParameter,
@@ -82,11 +86,17 @@ export class SwaggerMetaGenerator {
         webRouterInfo.method
       ) || [];
 
-    const paramTypes = getMethodParamTypes(new module(), webRouterInfo.method);
+
+    const ins = new module();
+
+    // 获取方法参数名
+    const argsNames = getParamNames(ins[webRouterInfo.method]);
+
+    // 获取方法参数类型
+    const paramTypes = getMethodParamTypes(ins, webRouterInfo.method);
     for (const routeArgs of routeArgsInfo) {
       const swaggerParameter = new SwaggerDocumentParameter();
-
-      swaggerParameter.name = routeArgs.propertyData;
+      swaggerParameter.name = argsNames[routeArgs.index];
       swaggerParameter.in = convertTypeToString(routeArgs.type);
       if (swaggerParameter.in === 'path') {
         swaggerParameter.required = true;
@@ -98,12 +108,18 @@ export class SwaggerMetaGenerator {
           continue;
         }
       }
-      swaggerParameter.schema = {
-        type: !isClass(paramTypes[routeArgs.index])
-          ? convertSchemaType(paramTypes[routeArgs.index].name)
-          : paramTypes[routeArgs.index].name,
-        name: undefined,
-      };
+
+      if (isClass(paramTypes[routeArgs.index])) {
+        this.generateSwaggerDefinition(paramTypes[routeArgs.index]);
+        swaggerParameter.schema = {
+          '$ref': '#/components/schemas/' + paramTypes[routeArgs.index].name,
+        }
+      } else {
+        swaggerParameter.schema = {
+          type: convertSchemaType(paramTypes[routeArgs.index].name),
+          name: undefined,
+        }
+      }
 
       // add parameter
       swaggerRouter.parameters.push(swaggerParameter);
@@ -114,6 +130,26 @@ export class SwaggerMetaGenerator {
         description: '',
       },
     };
+  }
+
+  generateSwaggerDefinition(definitionClass) {
+    const swaggerDefinition = new SwaggerDefinition();
+    swaggerDefinition.name = definitionClass.name;
+    swaggerDefinition.type = 'object';
+
+    const target = new definitionClass();
+    const rules = getClassMetadata(RULES_KEY, definitionClass);
+    if (rules) {
+      const properties = Object.keys(rules);
+      for (let property of properties) {
+        const type = getPropertyType(target, property);
+        swaggerDefinition.properties[property] = {
+          type: convertSchemaType(type.name)
+        }
+      }
+    }
+
+    this.document.definitions.push(swaggerDefinition);
   }
 }
 

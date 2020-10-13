@@ -8,14 +8,18 @@ import {
   Body,
   HttpCode,
   Redirect,
-  Headers,
+  ALL, Rule, RuleType,
 } from '@midwayjs/decorator';
 import { UserService } from '../service/user';
 import { IMidwayKoaContext } from '@midwayjs/koa';
 
-export class User {
-  firstName: string;
-  lastName: number
+export class UserDTO {
+
+  @Rule(RuleType.string().required())
+  name: string;
+
+  @Rule(RuleType.number())
+  age: number;
 }
 
 @Provide()
@@ -34,7 +38,7 @@ export class APIController {
 
   @Get('/', { middleware: []})
   @HttpCode(201)
-  async home(@Query() name: string, @Query() age: number, @Headers() user: User) {
+  async home(@Query() name: string, @Query() age: number, @Query(ALL) user: UserDTO) {
     return 'hello world,' + name + age;
   }
 
