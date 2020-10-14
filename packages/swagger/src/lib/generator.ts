@@ -5,6 +5,7 @@ import {
   getMethodParamTypes,
   getParamNames,
   getPropertyDataFromClass,
+  getPropertyMetadata,
   getPropertyType,
   isClass,
   RouteParamTypes,
@@ -22,6 +23,7 @@ import {
   SwaggerDocumentRouter,
   SwaggerDocumentTag,
 } from './document';
+import { ApiFormat, SWAGGER_DOCUMENT_KEY } from './createAPI';
 
 export class SwaggerMetaGenerator {
   document: SwaggerDocument;
@@ -76,7 +78,18 @@ export class SwaggerMetaGenerator {
     swaggerRouter: SwaggerDocumentRouter,
     module
   ) {
-    swaggerRouter.summary = webRouterInfo.routerName;
+    const ins = new module();
+    const swaggerApi: ApiFormat = getPropertyMetadata(
+      SWAGGER_DOCUMENT_KEY,
+      ins,
+      webRouterInfo.method
+    );
+
+    console.log(swaggerApi);
+
+    swaggerRouter.summary = swaggerApi?.summary || webRouterInfo.routerName;
+    swaggerRouter.description =
+      swaggerApi?.description || webRouterInfo.routerName;
     // swaggerRouter.operationId = webRouterInfo.method;
     swaggerRouter.parameters = [];
     const routeArgsInfo: RouterParamValue[] =
@@ -86,7 +99,7 @@ export class SwaggerMetaGenerator {
         webRouterInfo.method
       ) || [];
 
-    const ins = new module();
+
 
     // 获取方法参数名
     const argsNames = getParamNames(ins[webRouterInfo.method]);

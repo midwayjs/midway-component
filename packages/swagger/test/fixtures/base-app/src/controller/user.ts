@@ -14,6 +14,7 @@ import {
 } from '@midwayjs/decorator';
 import { UserService } from '../service/user';
 import { IMidwayKoaContext } from '@midwayjs/koa';
+import { CreateAPI } from '../../../../../src';
 
 export class UserDTO {
 
@@ -23,39 +24,6 @@ export class UserDTO {
   @Rule(RuleType.number())
   age: number;
 }
-
-class SwaggerAPI {
-  summary(summary: string) {
-    return this;
-  }
-
-  description(desc: string) {
-    return this;
-  }
-
-  addParameter(summary: string, description?: string) {
-    return this;
-  }
-
-  addReturn(status: number, result) {
-    return this;
-  }
-
-  example(example: any) {
-    return this;
-  }
-
-  build() {
-    return (target: any, property: string) => {
-
-    }
-  }
-}
-
-function CreateAPI() {
-  return new SwaggerAPI();
-}
-
 
 @Provide()
 @Controller('/user')
@@ -70,11 +38,33 @@ export class UserController {
   @CreateAPI()
     .summary('获取用户')
     .description('这是一个完整的获取用户的接口')
-    .addParameter('用户 id')
-    .example(require('./example/user'))
-    .addReturn(200, UserDTO)
-    .addReturn(500, Error)
+    .param('用户 id')
+    .example(require('../example/user'))
+    .response(200, UserDTO)
+    .response(500, Error)
     .build()
+
+  @CreateAPI({
+    summary: '获取用户',
+    description: '这是一个完整的获取用户的接口',
+    param: [
+      {
+        summary: '用户 id'
+      }
+    ],
+    example: require('../example/user'),
+    response: [
+      {
+        status: 200,
+        type: UserDTO
+      },
+      {
+        status: 500,
+        type: Error
+      }
+    ]
+  })
+
   @Get('/:userId')
   async getUser(@Param() userId: number) {
     return {
