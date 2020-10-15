@@ -99,8 +99,6 @@ export class SwaggerMetaGenerator {
         webRouterInfo.method
       ) || [];
 
-
-
     // 获取方法参数名
     const argsNames = getParamNames(ins[webRouterInfo.method]);
 
@@ -108,8 +106,14 @@ export class SwaggerMetaGenerator {
     const paramTypes = getMethodParamTypes(ins, webRouterInfo.method);
     for (const routeArgs of routeArgsInfo) {
       const swaggerParameter = new SwaggerDocumentParameter();
+      const argsApiInfo = swaggerApi?.params[routeArgs.index];
+      swaggerParameter.description = argsApiInfo?.description;
       swaggerParameter.name = argsNames[routeArgs.index];
       swaggerParameter.in = convertTypeToString(routeArgs.type);
+      swaggerParameter.required = argsApiInfo?.required;
+      swaggerParameter.deprecated = argsApiInfo?.deprecated;
+      swaggerParameter.allowEmptyValue = argsApiInfo?.allowEmptyValue;
+      swaggerParameter.example = argsApiInfo?.example;
       if (swaggerParameter.in === 'path') {
         swaggerParameter.required = true;
 
@@ -150,12 +154,20 @@ export class SwaggerMetaGenerator {
       swaggerRouter.parameters.push(swaggerParameter);
     }
 
-    // 获取方法返回值
-    swaggerRouter.responses = {
-      200: {
-        description: '',
-      },
-    };
+    swaggerRouter.responses = {};
+    for (const apiResponse of swaggerApi?.response || []) {
+      // 获取方法返回值
+      swaggerRouter.responses[apiResponse.status] = {
+        description: apiResponse?.description,
+        content: apiResponse?.content,
+        headers: apiResponse?.headers,
+      };
+    }
+
+    // 兜底加个 200
+    if (Object.keys(swaggerRouter.responses).length === 0) {
+      swaggerRouter.responses = { 200: { description: '' } };
+    }
   }
 
   generateSwaggerDefinition(definitionClass) {

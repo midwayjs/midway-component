@@ -127,6 +127,9 @@ export class SwaggerDocumentParameter {
   name: string;
   description: string;
   required: boolean;
+  deprecated: boolean;
+  allowEmptyValue: boolean;
+  example: string;
   schema;
 
   toJSON() {
@@ -135,7 +138,10 @@ export class SwaggerDocumentParameter {
       name: this.name,
       description: this.description,
       required: this.required,
+      deprecated: this.deprecated,
+      allowEmptyValue: this.allowEmptyValue,
       schema: this.schema,
+      example: this.example,
     };
   }
 }

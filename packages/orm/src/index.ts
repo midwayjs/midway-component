@@ -138,3 +138,5 @@ export function useEntityModel<Entity>(
 ): Repository<Entity> {
   return getRepository<Entity>(clz, connectionName);
 }
+
+export { OrmConfiguration as Configuration } from './configuration';

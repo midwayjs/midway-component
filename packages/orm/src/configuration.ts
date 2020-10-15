@@ -14,9 +14,10 @@ import {
   ORM_MODEL_KEY,
 } from '.';
 import { ORM_HOOK_KEY, OrmConnectionHook } from './hook';
+import { join } from 'path';
 
 @Configuration({
-  importConfigs: ['./config'],
+  importConfigs: [join(__dirname, './config')],
   namespace: 'orm',
 })
 export class OrmConfiguration implements ILifeCycle {

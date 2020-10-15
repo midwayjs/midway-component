@@ -38,32 +38,15 @@ export class UserController {
   @CreateAPI()
     .summary('获取用户')
     .description('这是一个完整的获取用户的接口')
-    .param('用户 id')
-    .example(require('../example/user'))
-    .response(200, UserDTO)
-    .response(500, Error)
+    .param('用户 id', {
+      required: true,
+      example: 2
+    })
+    .respond(200, '正常返回', 'text', {
+      example: 'hello world'
+    })
+    .respond(500, '抛出错误')
     .build()
-
-  @CreateAPI({
-    summary: '获取用户',
-    description: '这是一个完整的获取用户的接口',
-    param: [
-      {
-        summary: '用户 id'
-      }
-    ],
-    example: require('../example/user'),
-    response: [
-      {
-        status: 200,
-        type: UserDTO
-      },
-      {
-        status: 500,
-        type: Error
-      }
-    ]
-  })
 
   @Get('/:userId')
   async getUser(@Param() userId: number) {

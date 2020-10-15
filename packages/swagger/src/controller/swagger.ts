@@ -7,12 +7,13 @@ import {
 } from '@midwayjs/decorator';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { safeRequire } from "@midwayjs/core";
+import { safeRequire } from '@midwayjs/core';
+import { SwaggerMetaGenerator } from '../lib/generator';
+import { CONTROLLER_KEY, listModule } from '@midwayjs/decorator';
 
 @Provide()
 @Controller('/swagger')
 export class SwaggerController {
-
   swaggerUiAssetPath: string;
 
   constructor() {
@@ -22,7 +23,7 @@ export class SwaggerController {
 
   @Get('/json')
   async renderJSON() {
-    return 'hello world';
+    return this.generateSwaggerDocument();
   }
 
   @Get('/ui')
@@ -47,5 +48,17 @@ export class SwaggerController {
 
   getSwaggerUIResource(requestPath) {
     return readFileSync(join(this.swaggerUiAssetPath, requestPath));
+  }
+
+  generateSwaggerDocument() {
+    const controllerModules = listModule(CONTROLLER_KEY);
+    const generator = new SwaggerMetaGenerator();
+
+    for (const module of controllerModules) {
+      if (module !== SwaggerController) {
+        generator.generateController(module);
+      }
+    }
+    return generator.generate();
   }
 }
