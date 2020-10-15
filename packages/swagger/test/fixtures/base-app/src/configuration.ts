@@ -1,10 +1,11 @@
 import { Configuration } from '@midwayjs/decorator';
-import { join } from 'path';
+import * as swagger from '../../../../src';
 
 @Configuration({
   imports: [
-    join(__dirname, '../../../../src')
+    swagger
   ]
 })
 export class ContainerConfiguration {
+
 }

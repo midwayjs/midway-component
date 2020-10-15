@@ -5,15 +5,21 @@ import {
   Provide,
   RequestPath,
 } from '@midwayjs/decorator';
-import { getAbsoluteFSPath } from 'swagger-ui-dist';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-
-const swaggerUiAssetPath = getAbsoluteFSPath();
+import { safeRequire } from "@midwayjs/core";
 
 @Provide()
 @Controller('/swagger')
 export class SwaggerController {
+
+  swaggerUiAssetPath: string;
+
+  constructor() {
+    const { getAbsoluteFSPath } = safeRequire('swagger-ui-dist');
+    this.swaggerUiAssetPath = getAbsoluteFSPath();
+  }
+
   @Get('/json')
   async renderJSON() {
     return 'hello world';
@@ -25,6 +31,9 @@ export class SwaggerController {
     @RequestPath() requestPath: string,
     @Param() fileName?: string
   ) {
+    if (!this.swaggerUiAssetPath) {
+      return 'please run "npm install swagger-ui-dist" first';
+    }
     if (fileName) {
       requestPath = fileName;
     } else {
@@ -37,6 +46,6 @@ export class SwaggerController {
   }
 
   getSwaggerUIResource(requestPath) {
-    return readFileSync(join(swaggerUiAssetPath, requestPath));
+    return readFileSync(join(this.swaggerUiAssetPath, requestPath));
   }
 }
