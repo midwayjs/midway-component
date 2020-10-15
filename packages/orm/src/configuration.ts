@@ -31,10 +31,22 @@ export class OrmConfiguration implements ILifeCycle {
     for (const connectionOption of opts) {
       connectionOption.entities = entities || [];
       connectionOption.subscribers = eventSubs || [];
-      this.connectionNames.push(connectionOption.name || 'default');
-      const rtOpt = await this.beforeCreate(container, connectionOption);
-      const con = await createConnection(rtOpt);
-      await this.afterCreate(container, rtOpt, con);
+      const name = connectionOption.name || 'default';
+      this.connectionNames.push(name);
+      this.connectionNames.push(name);
+      let isConnected = false;
+      try {
+        const conn = getConnection(name);
+        if (conn.isConnected) {
+          isConnected = true;
+        }
+      } catch {
+      }
+      if (!isConnected) {
+        const rtOpt = await this.beforeCreate(container, connectionOption);
+        const con = await createConnection(rtOpt);
+        await this.afterCreate(container, rtOpt, con);
+      }
     }
 
     container.registerObject(CONNECTION_KEY, (instanceName) => {
