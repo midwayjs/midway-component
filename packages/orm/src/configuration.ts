@@ -33,7 +33,6 @@ export class OrmConfiguration implements ILifeCycle {
       connectionOption.subscribers = eventSubs || [];
       const name = connectionOption.name || 'default';
       this.connectionNames.push(name);
-      this.connectionNames.push(name);
       let isConnected = false;
       try {
         const conn = getConnection(name);
