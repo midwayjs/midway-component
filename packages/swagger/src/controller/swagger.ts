@@ -3,11 +3,13 @@ import {
   Get,
   Param,
   Provide,
-  RequestPath,
+  ContentType,
+  Inject,
+  App,
 } from '@midwayjs/decorator';
 import { readFileSync } from 'fs';
-import { join } from 'path';
-import { safeRequire } from '@midwayjs/core';
+import { join, extname } from 'path';
+import { safeRequire, IMidwayApplication, MidwayFrameworkType } from '@midwayjs/core';
 import { SwaggerMetaGenerator } from '../lib/generator';
 import { CONTROLLER_KEY, listModule } from '@midwayjs/decorator';
 
@@ -16,8 +18,14 @@ import { CONTROLLER_KEY, listModule } from '@midwayjs/decorator';
 export class SwaggerController {
   swaggerUiAssetPath: string;
 
+  @App()
+  app: IMidwayApplication;
+
+  @Inject()
+  ctx: any;
+
   constructor() {
-    const { getAbsoluteFSPath } = safeRequire('swagger-ui-dist');
+    const {getAbsoluteFSPath} = safeRequire('swagger-ui-dist');
     this.swaggerUiAssetPath = getAbsoluteFSPath();
   }
 
@@ -27,23 +35,30 @@ export class SwaggerController {
   }
 
   @Get('/ui')
+  @ContentType('html')
+  async renderSwaggerMain() {
+    if (!this.swaggerUiAssetPath) {
+      return 'please run "npm install swagger-ui-dist" first';
+    }
+    const requestPath = '/index.html';
+    return this.getSwaggerUIResource(requestPath);
+  }
+
   @Get('/ui/:fileName')
   async renderSwagger(
-    @RequestPath() requestPath: string,
-    @Param() fileName?: string
+    @Param() fileName: string
   ) {
     if (!this.swaggerUiAssetPath) {
       return 'please run "npm install swagger-ui-dist" first';
     }
-    if (fileName) {
-      requestPath = fileName;
-    } else {
-      requestPath = requestPath.replace('/swagger/ui', '/');
-      if (requestPath === '/') {
-        requestPath = '/index.html';
+    if (extname(fileName)) {
+      if (this.app.getFrameworkType() === MidwayFrameworkType.WEB_EXPRESS) {
+        this.ctx.res.type(extname(fileName));
+      } else {
+        this.ctx.type = extname(fileName);
       }
     }
-    return this.getSwaggerUIResource(requestPath);
+    return this.getSwaggerUIResource(fileName);
   }
 
   getSwaggerUIResource(requestPath) {
