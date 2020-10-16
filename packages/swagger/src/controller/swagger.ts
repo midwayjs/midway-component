@@ -3,18 +3,15 @@ import {
   Get,
   Param,
   Provide,
-  ContentType,
   Inject,
   App,
 } from '@midwayjs/decorator';
 import { readFileSync } from 'fs';
 import { join, extname } from 'path';
 import { safeRequire, IMidwayApplication, MidwayFrameworkType } from '@midwayjs/core';
-import { SwaggerMetaGenerator } from '../lib/generator';
-import { CONTROLLER_KEY, listModule } from '@midwayjs/decorator';
 
 @Provide()
-@Controller('/swagger')
+@Controller('/swagger-ui')
 export class SwaggerController {
   swaggerUiAssetPath: string;
 
@@ -24,6 +21,9 @@ export class SwaggerController {
   @Inject()
   ctx: any;
 
+  @Inject()
+  swaggerGenerator: any;
+
   constructor() {
     const {getAbsoluteFSPath} = safeRequire('swagger-ui-dist');
     this.swaggerUiAssetPath = getAbsoluteFSPath();
@@ -31,25 +31,19 @@ export class SwaggerController {
 
   @Get('/json')
   async renderJSON() {
-    return this.generateSwaggerDocument();
+    return this.swaggerGenerator.generate();
   }
 
-  @Get('/ui')
-  @ContentType('html')
-  async renderSwaggerMain() {
-    if (!this.swaggerUiAssetPath) {
-      return 'please run "npm install swagger-ui-dist" first';
-    }
-    const requestPath = '/index.html';
-    return this.getSwaggerUIResource(requestPath);
-  }
-
-  @Get('/ui/:fileName')
+  @Get('/')
+  @Get('/:fileName')
   async renderSwagger(
     @Param() fileName: string
   ) {
     if (!this.swaggerUiAssetPath) {
       return 'please run "npm install swagger-ui-dist" first';
+    }
+    if (!fileName) {
+      fileName = '/index.html';
     }
     if (extname(fileName)) {
       if (this.app.getFrameworkType() === MidwayFrameworkType.WEB_EXPRESS) {
@@ -58,22 +52,17 @@ export class SwaggerController {
         this.ctx.type = extname(fileName);
       }
     }
-    return this.getSwaggerUIResource(fileName);
-  }
 
-  getSwaggerUIResource(requestPath) {
-    return readFileSync(join(this.swaggerUiAssetPath, requestPath));
-  }
-
-  generateSwaggerDocument() {
-    const controllerModules = listModule(CONTROLLER_KEY);
-    const generator = new SwaggerMetaGenerator();
-
-    for (const module of controllerModules) {
-      if (module !== SwaggerController) {
-        generator.generateController(module);
-      }
+    if(fileName.indexOf('index.html') !== -1) {
+      const htmlContent = this.getSwaggerUIResource(fileName, 'utf-8');
+      return htmlContent.replace('https:\/\/petstore.swagger.io\/v2\/swagger.json', '/swagger-ui/json');
+    } else {
+      return this.getSwaggerUIResource(fileName);
     }
-    return generator.generate();
   }
+
+  getSwaggerUIResource(requestPath, encoding?: string) {
+    return readFileSync(join(this.swaggerUiAssetPath, requestPath), encoding);
+  }
+
 }

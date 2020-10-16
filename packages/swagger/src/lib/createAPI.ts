@@ -26,25 +26,24 @@ export interface APIResponseFormat {
 }
 
 export class SwaggerAPI {
-  _summary: string;
-  _description: string;
-  _params = [];
-  _response = [];
-  _example: string;
+  private _summary: string;
+  private _description: string;
+  private _params = [];
+  private _response = [];
 
-  summary(summary: string) {
+  summary(summary: string): SwaggerAPI {
     this._summary = summary;
     return this;
   }
 
-  description(desc: string) {
+  description(desc: string): SwaggerAPI {
     this._description = desc;
     return this;
   }
 
-  param(description: Partial<APIParamFormat>);
-  param(description: string, options: Partial<APIParamFormat>);
-  param(description: any, options?: Partial<APIParamFormat>) {
+  param(description: Partial<APIParamFormat>): SwaggerAPI;
+  param(description: string, options?: Partial<APIParamFormat>): SwaggerAPI;
+  param(description: any, options?: Partial<APIParamFormat>): SwaggerAPI {
     if (typeof description === 'string') {
       this._params.push({
         description,
@@ -60,16 +59,22 @@ export class SwaggerAPI {
 
   respond(
     status: number,
-    description: string,
+    description?: string,
     respondType?: string,
     options?: Partial<APIResponseFormat>
-  ) {
+  ): SwaggerAPI {
     const respondContentType = convertRespondType(respondType, options);
     if (respondContentType) {
       this._response.push({
         status,
-        description,
+        description: description || '' ,
         content: respondContentType,
+        ...options,
+      });
+    } else {
+      this._response.push({
+        status,
+        description: description || '' ,
         ...options,
       });
     }
@@ -98,13 +103,29 @@ export class SwaggerAPI {
   }
 }
 
-export function CreateAPI(): SwaggerAPI;
-export function CreateAPI(data: any): MethodDecorator;
-export function CreateAPI(data?: any): MethodDecorator | SwaggerAPI {
+export function CreateAPIDoc(): SwaggerAPI;
+export function CreateAPIDoc(data: any): MethodDecorator;
+export function CreateAPIDoc(data?: any): MethodDecorator | SwaggerAPI {
   if (data) {
     return (target: any, property: string) => {};
   } else {
     return new SwaggerAPI();
+  }
+}
+
+export function CreateAPIPropertyDoc(description: Partial<APIParamFormat>): PropertyDecorator;
+export function CreateAPIPropertyDoc(description: string, options?: Partial<APIParamFormat>): PropertyDecorator;
+export function CreateAPIPropertyDoc(description: any, options?: Partial<APIParamFormat>): PropertyDecorator {
+  return (target: any, propertyKey: string) => {
+    savePropertyMetadata(
+      SWAGGER_DOCUMENT_KEY,
+      {
+        description,
+        ...options
+      },
+      target,
+      propertyKey
+    );
   }
 }
 

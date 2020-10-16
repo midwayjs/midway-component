@@ -85,8 +85,6 @@ export class SwaggerMetaGenerator {
       webRouterInfo.method
     );
 
-    console.log(swaggerApi);
-
     swaggerRouter.summary = swaggerApi?.summary || webRouterInfo.routerName;
     swaggerRouter.description =
       swaggerApi?.description || webRouterInfo.routerName;

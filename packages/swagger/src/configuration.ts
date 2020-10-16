@@ -6,15 +6,8 @@ import { join } from 'path';
   importConfigs: [join(__dirname, 'config')],
 })
 export class AutoConfiguration {
-  async onReady() {
-    // const controllerModules = listModule(CONTROLLER_KEY);
-    // const generator = new SwaggerMetaGenerator();
-    //
-    // for (const module of controllerModules) {
-    //   if (module !== SwaggerController) {
-    //     generator.generateController(module);
-    //   }
-    // }
-    // console.log(JSON.stringify(generator.generate()));
+  async onReady(container) {
+    const swaggerGenerator = await container.getAsync('swagger:swaggerGenerator');
+    console.log(JSON.stringify(swaggerGenerator.generate()));
   }
 }
