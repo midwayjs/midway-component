@@ -4,7 +4,7 @@
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@midwayjs/decorator": "2",
+    "@midwayjs/decorator": "^2.3.0",
     "@midwayjs/egg-base-module": "^1.0.5",
     "@midwayjs/faas-typings": "^1.0.0",
     "egg": "^2.25.0"
@@ -14,7 +14,7 @@
     "dist/**/*.d.ts"
   ],
   "devDependencies": {
-    "@midwayjs/core": "2",
+    "@midwayjs/core": "^2.3.0",
     "@midwayjs/faas": "^1.0.0",
     "@midwayjs/serverless-invoke": "^1.0.0",
     "@midwayjs/cli": "^1.0.0",
@@ -23,8 +23,8 @@
   "license": "MIT",
   "scripts": {
     "build": "midway-bin build -c",
-    "test": "midway-bin test",
-    "cov": "midway-bin cov",
+    "test": "midway-bin test --ts",
+    "cov": "midway-bin cov --ts",
     "ci": "npm run test"
   },
   "repository": {

@@ -21,8 +21,8 @@
   "license": "MIT",
   "scripts": {
     "build": "midway-bin build -c",
-    "test": "midway-bin test",
-    "cov": "midway-bin cov",
+    "test": "midway-bin test --ts",
+    "cov": "midway-bin cov --ts",
     "ci": "npm run test"
   },
   "repository": {

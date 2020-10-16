@@ -11,15 +11,15 @@
     "dist/**/*.d.ts"
   ],
   "devDependencies": {
-    "@midwayjs/core": "2",
+    "@midwayjs/core": "^2.3.0",
     "@midwayjs/cli": "^1.0.0",
     "egg": "^2.25.0"
   },
   "license": "MIT",
   "scripts": {
     "build": "midway-bin build -c",
-    "test": "midway-bin test",
-    "cov": "midway-bin cov",
+    "test": "midway-bin test --ts",
+    "cov": "midway-bin cov --ts",
     "ci": "npm run test"
   },
   "repository": {

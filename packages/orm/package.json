@@ -4,8 +4,8 @@
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@midwayjs/core": "2",
-    "@midwayjs/decorator": "2",
+    "@midwayjs/core": "^2.3.0",
+    "@midwayjs/decorator": "^2.3.0",
     "typeorm": "^0.2.25"
   },
   "files": [
@@ -23,8 +23,8 @@
   "license": "MIT",
   "scripts": {
     "build": "midway-bin build -c",
-    "test": "midway-bin test",
-    "cov": "midway-bin cov",
+    "test": "midway-bin test --ts",
+    "cov": "midway-bin cov --ts",
     "ci": "npm run test"
   },
   "repository": {
