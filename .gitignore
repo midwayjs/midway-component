@@ -20,3 +20,4 @@ packages/midway/_package.json
 public
 .faas_debug_tmp
 *.sqlite
+.tsbuildinfo
