@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/midwayjs/midway-component/compare/@midwayjs/orm@1.1.0...@midwayjs/orm@1.1.1) (2020-10-16)
+
+
+### Bug Fixes
+
+* support multi thread ([#12](https://github.com/midwayjs/midway-component/issues/12)) ([0436d23](https://github.com/midwayjs/midway-component/commit/0436d239746867588822b1dcae7edebf45303755))
+
+
+### Features
+
+* orm hook ([#10](https://github.com/midwayjs/midway-component/issues/10)) ([0c50503](https://github.com/midwayjs/midway-component/commit/0c505039e27734ffd38a82e695bb26dc28909c18))
+
+
+
+
+
 # 1.1.0 (2020-08-21)
 
 
