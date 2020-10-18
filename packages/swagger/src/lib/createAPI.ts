@@ -17,6 +17,11 @@ export interface APIParamFormat {
   example: any;
 }
 
+export interface APIPropertyFormat {
+  description: string;
+  example: any;
+}
+
 export interface APIResponseFormat {
   status: string;
   description: string;
@@ -103,9 +108,9 @@ export class SwaggerAPI {
   }
 }
 
-export function CreateAPIDoc(): SwaggerAPI;
-export function CreateAPIDoc(data: any): MethodDecorator;
-export function CreateAPIDoc(data?: any): MethodDecorator | SwaggerAPI {
+export function CreateApiDoc(): SwaggerAPI;
+export function CreateApiDoc(data: any): MethodDecorator;
+export function CreateApiDoc(data?: any): MethodDecorator | SwaggerAPI {
   if (data) {
     return (target: any, property: string) => {};
   } else {
@@ -113,9 +118,9 @@ export function CreateAPIDoc(data?: any): MethodDecorator | SwaggerAPI {
   }
 }
 
-export function CreateAPIPropertyDoc(description: Partial<APIParamFormat>): PropertyDecorator;
-export function CreateAPIPropertyDoc(description: string, options?: Partial<APIParamFormat>): PropertyDecorator;
-export function CreateAPIPropertyDoc(description: any, options?: Partial<APIParamFormat>): PropertyDecorator {
+export function CreateApiPropertyDoc(description: Partial<APIPropertyFormat>): PropertyDecorator;
+export function CreateApiPropertyDoc(description: string, options?: Partial<APIPropertyFormat>): PropertyDecorator;
+export function CreateApiPropertyDoc(description: any, options?: Partial<APIPropertyFormat>): PropertyDecorator {
   return (target: any, propertyKey: string) => {
     savePropertyMetadata(
       SWAGGER_DOCUMENT_KEY,

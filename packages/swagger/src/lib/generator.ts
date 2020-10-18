@@ -23,7 +23,7 @@ import {
   SwaggerDocumentRouter,
   SwaggerDocumentTag,
 } from './document';
-import { ApiFormat, SWAGGER_DOCUMENT_KEY } from './createAPI';
+import { ApiFormat, APIParamFormat, SWAGGER_DOCUMENT_KEY } from './createAPI';
 
 export class SwaggerMetaGenerator {
   document: SwaggerDocument;
@@ -138,7 +138,7 @@ export class SwaggerMetaGenerator {
       // add body
       if (swaggerParameter.in === 'body') {
         swaggerRouter.requestBody = {
-          description: argsNames[routeArgs.index],
+          description: argsApiInfo?.description || argsNames[routeArgs.index],
           content: {
             'application/json': {
               schema: swaggerParameter.schema,
@@ -178,9 +178,21 @@ export class SwaggerMetaGenerator {
     if (rules) {
       const properties = Object.keys(rules);
       for (const property of properties) {
+        // set required
+        if (rules[property]?._flags?.presence === 'required') {
+          swaggerDefinition.required.push(property);
+        }
         const type = getPropertyType(target, property);
+        // get property description
+        const propertyInfo: APIParamFormat = getPropertyMetadata(
+          SWAGGER_DOCUMENT_KEY,
+          definitionClass,
+          property
+        );
         swaggerDefinition.properties[property] = {
           type: convertSchemaType(type.name),
+          description: propertyInfo?.description,
+          example: propertyInfo?.example,
         };
       }
     }

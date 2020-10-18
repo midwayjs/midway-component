@@ -150,15 +150,18 @@ export class SwaggerDefinition {
   name: string;
   type: string;
   properties;
+  required: string[];
 
   constructor() {
     this.properties = {};
+    this.required = [];
   }
 
   toJSON() {
     return {
       type: this.type,
       properties: this.properties,
+      required: this.required,
     };
   }
 }

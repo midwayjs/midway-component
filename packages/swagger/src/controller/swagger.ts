@@ -8,7 +8,11 @@ import {
 } from '@midwayjs/decorator';
 import { readFileSync } from 'fs';
 import { join, extname } from 'path';
-import { safeRequire, IMidwayApplication, MidwayFrameworkType } from '@midwayjs/core';
+import {
+  safeRequire,
+  IMidwayApplication,
+  MidwayFrameworkType,
+} from '@midwayjs/core';
 
 @Provide()
 @Controller('/swagger-ui')
@@ -25,7 +29,7 @@ export class SwaggerController {
   swaggerGenerator: any;
 
   constructor() {
-    const {getAbsoluteFSPath} = safeRequire('swagger-ui-dist');
+    const { getAbsoluteFSPath } = safeRequire('swagger-ui-dist');
     this.swaggerUiAssetPath = getAbsoluteFSPath();
   }
 
@@ -36,9 +40,7 @@ export class SwaggerController {
 
   @Get('/')
   @Get('/:fileName')
-  async renderSwagger(
-    @Param() fileName: string
-  ) {
+  async renderSwagger(@Param() fileName: string) {
     if (!this.swaggerUiAssetPath) {
       return 'please run "npm install swagger-ui-dist" first';
     }
@@ -53,9 +55,12 @@ export class SwaggerController {
       }
     }
 
-    if(fileName.indexOf('index.html') !== -1) {
+    if (fileName.indexOf('index.html') !== -1) {
       const htmlContent = this.getSwaggerUIResource(fileName, 'utf-8');
-      return htmlContent.replace('https:\/\/petstore.swagger.io\/v2\/swagger.json', '/swagger-ui/json');
+      return htmlContent.replace(
+        'https://petstore.swagger.io/v2/swagger.json',
+        '/swagger-ui/json'
+      );
     } else {
       return this.getSwaggerUIResource(fileName);
     }
@@ -64,5 +69,4 @@ export class SwaggerController {
   getSwaggerUIResource(requestPath, encoding?: string) {
     return readFileSync(join(this.swaggerUiAssetPath, requestPath), encoding);
   }
-
 }
