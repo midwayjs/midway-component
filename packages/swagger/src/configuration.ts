@@ -7,7 +7,11 @@ import { join } from 'path';
 })
 export class AutoConfiguration {
   async onReady(container) {
-    const swaggerGenerator = await container.getAsync('swagger:swaggerGenerator');
-    console.log(JSON.stringify(swaggerGenerator.generate()));
+    if (process.env.MIDWAY_SWAGGER_DEBUG === 'true') {
+      const swaggerGenerator = await container.getAsync(
+        'swagger:swaggerGenerator'
+      );
+      console.log(JSON.stringify(swaggerGenerator.generate()));
+    }
   }
 }
