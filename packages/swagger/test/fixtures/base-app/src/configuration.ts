@@ -1,13 +1,11 @@
 import { Configuration } from '@midwayjs/decorator';
-import * as orm from '../../../../src';
+import * as swagger from '../../../../src';
 
 @Configuration({
   imports: [
-    orm
-  ],
-  importConfigs: [
-    './config'
+    swagger
   ]
 })
 export class ContainerConfiguration {
+
 }

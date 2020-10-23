@@ -1,14 +1,24 @@
 import { ILifeCycle, IMidwayContainer } from '@midwayjs/core';
 import { Configuration, listModule, Config } from '@midwayjs/decorator';
-import { createConnection, getConnection, getRepository, ConnectionOptions, Connection } from 'typeorm';
-import { ENTITY_MODEL_KEY, EVENT_SUBSCRIBER_KEY, CONNECTION_KEY, ORM_MODEL_KEY } from '.';
+import {
+  createConnection,
+  getConnection,
+  getRepository,
+  ConnectionOptions,
+  Connection,
+} from 'typeorm';
+import {
+  ENTITY_MODEL_KEY,
+  EVENT_SUBSCRIBER_KEY,
+  CONNECTION_KEY,
+  ORM_MODEL_KEY,
+} from '.';
 import { ORM_HOOK_KEY, OrmConnectionHook } from './hook';
+import { join } from 'path';
 
 @Configuration({
-  importConfigs: [
-    './config'
-  ],
-  namespace: 'orm'
+  importConfigs: [join(__dirname, './config')],
+  namespace: 'orm',
 })
 export class OrmConfiguration implements ILifeCycle {
   @Config('orm')
@@ -17,11 +27,14 @@ export class OrmConfiguration implements ILifeCycle {
   private connectionNames: string[] = [];
 
   async onReady(container: IMidwayContainer) {
-    (container as any).registerDataHandler(ORM_MODEL_KEY, (key: { modelKey, connectionName }) => {
-      // return getConnection(key.connectionName).getRepository(key.modelKey);
-      let repo = getRepository(key.modelKey, key.connectionName);
-      return repo;
-    });
+    (container as any).registerDataHandler(
+      ORM_MODEL_KEY,
+      (key: { modelKey; connectionName }) => {
+        // return getConnection(key.connectionName).getRepository(key.modelKey);
+        const repo = getRepository(key.modelKey, key.connectionName);
+        return repo;
+      }
+    );
 
     const entities = listModule(ENTITY_MODEL_KEY);
     const eventSubs = listModule(EVENT_SUBSCRIBER_KEY);
@@ -39,8 +52,7 @@ export class OrmConfiguration implements ILifeCycle {
         if (conn.isConnected) {
           isConnected = true;
         }
-      } catch {
-      }
+      } catch {}
       if (!isConnected) {
         const rtOpt = await this.beforeCreate(container, connectionOption);
         const con = await createConnection(rtOpt);
@@ -48,7 +60,7 @@ export class OrmConfiguration implements ILifeCycle {
       }
     }
 
-    container.registerObject(CONNECTION_KEY, (instanceName) => {
+    container.registerObject(CONNECTION_KEY, instanceName => {
       if (!instanceName) {
         instanceName = 'default';
       }
@@ -57,32 +69,32 @@ export class OrmConfiguration implements ILifeCycle {
   }
 
   async onStop(container: IMidwayContainer) {
-    await Promise.all(Object.values(this.connectionNames).map(async (connectionName) => {
-      let conn = getConnection(connectionName);
-      
-      await this.beforeClose(container, conn, connectionName);
-      
-      if (conn.isConnected) {
-        await conn.close();
-      }
-      
-      await this.afterClose(container, conn);
-    }));
+    await Promise.all(
+      Object.values(this.connectionNames).map(async connectionName => {
+        const conn = getConnection(connectionName);
+
+        await this.beforeClose(container, conn, connectionName);
+
+        if (conn.isConnected) {
+          await conn.close();
+        }
+
+        await this.afterClose(container, conn);
+      })
+    );
 
     this.connectionNames.length = 0;
   }
 
   formatConfig(): any[] {
     const originConfig = this.ormConfig;
-    if(originConfig?.type) {
+    if (originConfig?.type) {
       originConfig.name = 'default';
-      return [
-        originConfig
-      ]
+      return [originConfig];
     } else {
       const newArr = [];
 
-      for(const [key, value] of Object.entries(originConfig)) {
+      for (const [key, value] of Object.entries(originConfig)) {
         (value as any).name = key;
         newArr.push(value);
       }
@@ -93,10 +105,13 @@ export class OrmConfiguration implements ILifeCycle {
 
   /**
    * 创建 connection 之前
-   * @param container 
-   * @param opts 
+   * @param container
+   * @param opts
    */
-  private async beforeCreate(container: IMidwayContainer, opts: ConnectionOptions): Promise<ConnectionOptions> {
+  private async beforeCreate(
+    container: IMidwayContainer,
+    opts: ConnectionOptions
+  ): Promise<ConnectionOptions> {
     let rt = opts;
     const clzzs = listModule(ORM_HOOK_KEY);
     for (const clzz of clzzs) {
@@ -109,11 +124,15 @@ export class OrmConfiguration implements ILifeCycle {
   }
   /**
    * 创建 connection 之后
-   * @param container 
-   * @param opts 
-   * @param con 
+   * @param container
+   * @param opts
+   * @param con
    */
-  private async afterCreate(container: IMidwayContainer, opts: ConnectionOptions, con: Connection): Promise<Connection> {
+  private async afterCreate(
+    container: IMidwayContainer,
+    opts: ConnectionOptions,
+    con: Connection
+  ): Promise<Connection> {
     let rtCon: Connection = con;
     const clzzs = listModule(ORM_HOOK_KEY);
     for (const clzz of clzzs) {
@@ -126,11 +145,15 @@ export class OrmConfiguration implements ILifeCycle {
   }
   /**
    * 关闭连接之前
-   * @param container 
-   * @param con 
-   * @param connectionName 
+   * @param container
+   * @param con
+   * @param connectionName
    */
-  private async beforeClose(container: IMidwayContainer, con: Connection, connectionName: string) {
+  private async beforeClose(
+    container: IMidwayContainer,
+    con: Connection,
+    connectionName: string
+  ) {
     let rt = con;
     const clzzs = listModule(ORM_HOOK_KEY);
     for (const clzz of clzzs) {
@@ -143,8 +166,8 @@ export class OrmConfiguration implements ILifeCycle {
   }
   /**
    * 关闭连接之后
-   * @param container 
-   * @param con 
+   * @param container
+   * @param con
    */
   private async afterClose(container: IMidwayContainer, con: Connection) {
     let rt = con;

@@ -9,5 +9,5 @@ export default {
   rundir: tmpDir,
   static: {
     dir: tmpDir,
-  }
-}
+  },
+};

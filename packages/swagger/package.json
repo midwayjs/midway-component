@@ -1,12 +1,11 @@
 {
-  "name": "@midwayjs/orm",
-  "version": "1.1.1",
+  "name": "@midwayjs/swagger",
+  "version": "1.0.0-beta.3",
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
     "@midwayjs/core": "^2.3.0",
-    "@midwayjs/decorator": "^2.3.0",
-    "typeorm": "^0.2.25"
+    "@midwayjs/decorator": "^2.3.0"
   },
   "files": [
     "dist/**/*.js",
@@ -14,12 +13,11 @@
   ],
   "devDependencies": {
     "@midwayjs/cli": "^1.0.0",
-    "sqlite3": "^5.0.0"
+    "@midwayjs/koa": "^2.3.0",
+    "@midwayjs/mock": "^2.3.0",
+    "swagger-ui-dist": "^3.34.0"
   },
-  "author": {
-    "name": "Kurten Chan",
-    "email": "chinkurten@gmail.com"
-  },
+  "author": "Harry Chen <czy88840616@gmail.com>",
   "license": "MIT",
   "scripts": {
     "build": "midway-bin build -c",

@@ -11,10 +11,26 @@ export abstract class ParentConfiguration {
     const eggApp = this.getEggApplication();
     await eggApp.ready();
 
-    cloneDeep(this.app, eggApp, Object.keys(this.app).concat(this.getFilterPropertyList()));
-    cloneDeep(Object.getPrototypeOf(this.app.context), eggApp.context, Object.keys(Object.getPrototypeOf(this.app.context)));
-    cloneDeep(Object.getPrototypeOf(this.app.request), eggApp.request, Object.keys(Object.getPrototypeOf(this.app.request)));
-    cloneDeep(Object.getPrototypeOf(this.app.response), eggApp.response, Object.keys(Object.getPrototypeOf(this.app.response)));
+    cloneDeep(
+      this.app,
+      eggApp,
+      Object.keys(this.app).concat(this.getFilterPropertyList())
+    );
+    cloneDeep(
+      Object.getPrototypeOf(this.app.context),
+      eggApp.context,
+      Object.keys(Object.getPrototypeOf(this.app.context))
+    );
+    cloneDeep(
+      Object.getPrototypeOf(this.app.request),
+      eggApp.request,
+      Object.keys(Object.getPrototypeOf(this.app.request))
+    );
+    cloneDeep(
+      Object.getPrototypeOf(this.app.response),
+      eggApp.response,
+      Object.keys(Object.getPrototypeOf(this.app.response))
+    );
 
     await this.afterEggAppAssign(eggApp);
   }
@@ -25,7 +41,7 @@ export abstract class ParentConfiguration {
     // add middleware from egg middleware
     if ((this.app as any)?.use && eggApp.middleware?.length) {
       await (this.app as any).useMiddleware(
-        eggApp.middleware.filter((el) => {
+        eggApp.middleware.filter(el => {
           return !['bodyParser', 'dispatch'].includes(el.name);
         })
       );
@@ -33,14 +49,7 @@ export abstract class ParentConfiguration {
   }
 
   getFilterPropertyList() {
-    return [
-      'req',
-      'request',
-      'res',
-      'response',
-      'context',
-      'callback',
-    ];
+    return ['req', 'request', 'res', 'response', 'context', 'callback'];
   }
 
   loadUserEggPlugin() {
@@ -66,13 +75,13 @@ export abstract class ParentConfiguration {
 }
 
 function formatPlugin(userPluginConfig) {
-  if (userPluginConfig[ 'default' ]) {
-    userPluginConfig = userPluginConfig[ 'default' ];
+  if (userPluginConfig['default']) {
+    userPluginConfig = userPluginConfig['default'];
   }
   for (const key in userPluginConfig) {
-    if (typeof userPluginConfig[ key ] === 'boolean') {
-      userPluginConfig[ key ] = {
-        enable: userPluginConfig[ key ]
+    if (typeof userPluginConfig[key] === 'boolean') {
+      userPluginConfig[key] = {
+        enable: userPluginConfig[key],
       };
     }
   }
