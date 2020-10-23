@@ -1,6 +1,6 @@
 {
   "name": "@midwayjs/egg-base-module",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
@@ -11,8 +11,8 @@
     "dist/**/*.d.ts"
   ],
   "devDependencies": {
-    "@midwayjs/core": "^2.3.0",
     "@midwayjs/cli": "^1.0.0",
+    "@midwayjs/core": "^2.3.0",
     "egg": "^2.25.0"
   },
   "license": "MIT",
