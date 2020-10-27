@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/midwayjs/midway-component/compare/@midwayjs/orm@1.2.0...@midwayjs/orm@1.2.1) (2020-10-27)
+
+**Note:** Version bump only for package @midwayjs/orm
+
+
+
+
+
 # [1.2.0](https://github.com/midwayjs/midway-component/compare/@midwayjs/orm@1.1.1...@midwayjs/orm@1.2.0) (2020-10-23)
 
 
