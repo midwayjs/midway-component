@@ -4,8 +4,6 @@
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@midwayjs/core": "^2.3.0",
-    "@midwayjs/decorator": "^2.3.0",
     "typeorm": "^0.2.25"
   },
   "files": [
@@ -14,6 +12,8 @@
   ],
   "devDependencies": {
     "@midwayjs/cli": "^1.0.0",
+    "@midwayjs/core": "^2.3.0",
+    "@midwayjs/decorator": "^2.3.0",
     "sqlite3": "^5.0.0"
   },
   "author": {
