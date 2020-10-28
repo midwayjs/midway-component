@@ -3,7 +3,6 @@ import {
   ControllerOption,
   getClassMetadata,
   getMethodParamTypes,
-  getParamNames,
   getPropertyDataFromClass,
   getPropertyMetadata,
   getPropertyType,
@@ -97,16 +96,13 @@ export class SwaggerMetaGenerator {
         webRouterInfo.method
       ) || [];
 
-    // 获取方法参数名
-    const argsNames = getParamNames(ins[webRouterInfo.method]);
-
     // 获取方法参数类型
     const paramTypes = getMethodParamTypes(ins, webRouterInfo.method);
     for (const routeArgs of routeArgsInfo) {
       const swaggerParameter = new SwaggerDocumentParameter();
       const argsApiInfo = swaggerApi?.params[routeArgs.index];
       swaggerParameter.description = argsApiInfo?.description;
-      swaggerParameter.name = argsApiInfo.name || argsNames[routeArgs.index];
+      swaggerParameter.name = argsApiInfo?.name || routeArgs?.propertyData;
       swaggerParameter.in = convertTypeToString(routeArgs.type);
       swaggerParameter.required = argsApiInfo?.required;
       swaggerParameter.deprecated = argsApiInfo?.deprecated;
@@ -138,7 +134,7 @@ export class SwaggerMetaGenerator {
       // add body
       if (swaggerParameter.in === 'body') {
         swaggerRouter.requestBody = {
-          description: argsApiInfo?.description || argsNames[routeArgs.index],
+          description: argsApiInfo?.description || routeArgs?.propertyData,
           content: {
             'application/json': {
               schema: swaggerParameter.schema,
