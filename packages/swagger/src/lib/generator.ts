@@ -32,9 +32,9 @@ export class SwaggerMetaGenerator {
     this.document = new SwaggerDocument();
     const info = new SwaggerDocumentInfo();
     info.title = options?.title || 'Midway2 Swagger API';
-    info.version =  options.version || '1.0.0';
+    info.version = options.version || '1.0.0';
 
-    info.description =  options?.description;
+    info.description = options?.description;
     info.termsOfService = options?.termsOfService;
     info.contact = options?.contact;
     info.license = options?.license;
@@ -50,11 +50,13 @@ export class SwaggerMetaGenerator {
     const prefix = controllerOption.prefix;
     const tag = new SwaggerDocumentTag();
     if (prefix !== '/') {
-      tag.name = /^\//.test(prefix) ? prefix.split('/')[1] : prefix;
-      tag.description = tag.name;
+      tag.name =
+        controllerOption?.routerOptions.tagName ||
+        (/^\//.test(prefix) ? prefix.split('/')[1] : prefix);
+      tag.description = controllerOption?.routerOptions.description || tag.name;
     } else {
-      tag.name = 'default';
-      tag.description = tag.name;
+      tag.name = controllerOption?.routerOptions.tagName || 'default';
+      tag.description = controllerOption?.routerOptions.description || tag.name;
     }
     this.document.tags.push(tag);
     // const globalMiddleware = controllerOption.routerOptions.middleware;
@@ -90,9 +92,12 @@ export class SwaggerMetaGenerator {
       webRouterInfo.method
     );
 
-    swaggerRouter.summary = swaggerApi?.summary || webRouterInfo.routerName;
+    swaggerRouter.summary =
+      swaggerApi?.summary || webRouterInfo.summary || webRouterInfo.routerName;
     swaggerRouter.description =
-      swaggerApi?.description || webRouterInfo.routerName;
+      swaggerApi?.description ||
+      webRouterInfo.description ||
+      webRouterInfo.routerName;
     // swaggerRouter.operationId = webRouterInfo.method;
     swaggerRouter.parameters = [];
     const routeArgsInfo: RouterParamValue[] =
