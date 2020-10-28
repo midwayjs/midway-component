@@ -1,7 +1,6 @@
 {
   "name": "@midwayjs/swagger",
   "version": "1.0.0-beta.6",
-  "private": true,
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "files": [

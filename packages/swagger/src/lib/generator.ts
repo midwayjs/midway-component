@@ -106,7 +106,7 @@ export class SwaggerMetaGenerator {
       const swaggerParameter = new SwaggerDocumentParameter();
       const argsApiInfo = swaggerApi?.params[routeArgs.index];
       swaggerParameter.description = argsApiInfo?.description;
-      swaggerParameter.name = argsNames[routeArgs.index];
+      swaggerParameter.name = argsApiInfo.name || argsNames[routeArgs.index];
       swaggerParameter.in = convertTypeToString(routeArgs.type);
       swaggerParameter.required = argsApiInfo?.required;
       swaggerParameter.deprecated = argsApiInfo?.deprecated;
