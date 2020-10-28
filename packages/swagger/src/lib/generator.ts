@@ -23,15 +23,21 @@ import {
   SwaggerDocumentTag,
 } from './document';
 import { ApiFormat, APIParamFormat, SWAGGER_DOCUMENT_KEY } from './createAPI';
+import { SwaggerGeneratorInfoOptions } from '../interface';
 
 export class SwaggerMetaGenerator {
   document: SwaggerDocument;
 
-  constructor() {
+  constructor(options?: SwaggerGeneratorInfoOptions) {
     this.document = new SwaggerDocument();
     const info = new SwaggerDocumentInfo();
-    info.title = 'Midway2 Swagger API';
-    info.version = '1.0.0';
+    info.title = options?.title || 'Midway2 Swagger API';
+    info.version =  options.version || '1.0.0';
+
+    info.description =  options?.description;
+    info.termsOfService = options?.termsOfService;
+    info.contact = options?.contact;
+    info.license = options?.license;
     this.document.info = info;
   }
 

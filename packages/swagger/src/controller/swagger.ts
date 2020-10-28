@@ -13,6 +13,7 @@ import {
   IMidwayApplication,
   MidwayFrameworkType,
 } from '@midwayjs/core';
+import { SwaggerGenerator } from '../service/generator';
 
 @Provide()
 @Controller('/swagger-ui')
@@ -26,7 +27,7 @@ export class SwaggerController {
   ctx: any;
 
   @Inject()
-  swaggerGenerator: any;
+  swaggerGenerator: SwaggerGenerator;
 
   constructor() {
     const { getAbsoluteFSPath } = safeRequire('swagger-ui-dist');
