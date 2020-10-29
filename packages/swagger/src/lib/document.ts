@@ -51,12 +51,18 @@ export class SwaggerDocumentInfo {
   description: string;
   version: string;
   title: string;
+  termsOfService: any;
+  contact: any;
+  license: any;
 
   toJSON() {
     return {
       description: this.description,
       version: this.version,
       title: this.title,
+      termsOfService: this.termsOfService,
+      contact: this.contact,
+      license: this.license,
     };
   }
 }

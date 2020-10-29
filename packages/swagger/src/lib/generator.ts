@@ -3,7 +3,6 @@ import {
   ControllerOption,
   getClassMetadata,
   getMethodParamTypes,
-  getParamNames,
   getPropertyDataFromClass,
   getPropertyMetadata,
   getPropertyType,
@@ -24,15 +23,21 @@ import {
   SwaggerDocumentTag,
 } from './document';
 import { ApiFormat, APIParamFormat, SWAGGER_DOCUMENT_KEY } from './createAPI';
+import { SwaggerGeneratorInfoOptions } from '../interface';
 
 export class SwaggerMetaGenerator {
   document: SwaggerDocument;
 
-  constructor() {
+  constructor(options?: SwaggerGeneratorInfoOptions) {
     this.document = new SwaggerDocument();
     const info = new SwaggerDocumentInfo();
-    info.title = 'Midway2 Swagger API';
-    info.version = '1.0.0';
+    info.title = options?.title || 'Midway2 Swagger API';
+    info.version = options.version || '1.0.0';
+
+    info.description = options?.description;
+    info.termsOfService = options?.termsOfService;
+    info.contact = options?.contact;
+    info.license = options?.license;
     this.document.info = info;
   }
 
@@ -45,11 +50,13 @@ export class SwaggerMetaGenerator {
     const prefix = controllerOption.prefix;
     const tag = new SwaggerDocumentTag();
     if (prefix !== '/') {
-      tag.name = /^\//.test(prefix) ? prefix.split('/')[1] : prefix;
-      tag.description = tag.name;
+      tag.name =
+        controllerOption?.routerOptions.tagName ||
+        (/^\//.test(prefix) ? prefix.split('/')[1] : prefix);
+      tag.description = controllerOption?.routerOptions.description || tag.name;
     } else {
-      tag.name = 'default';
-      tag.description = tag.name;
+      tag.name = controllerOption?.routerOptions.tagName || 'default';
+      tag.description = controllerOption?.routerOptions.description || tag.name;
     }
     this.document.tags.push(tag);
     // const globalMiddleware = controllerOption.routerOptions.middleware;
@@ -85,9 +92,12 @@ export class SwaggerMetaGenerator {
       webRouterInfo.method
     );
 
-    swaggerRouter.summary = swaggerApi?.summary || webRouterInfo.routerName;
+    swaggerRouter.summary =
+      swaggerApi?.summary || webRouterInfo.summary || webRouterInfo.routerName;
     swaggerRouter.description =
-      swaggerApi?.description || webRouterInfo.routerName;
+      swaggerApi?.description ||
+      webRouterInfo.description ||
+      webRouterInfo.routerName;
     // swaggerRouter.operationId = webRouterInfo.method;
     swaggerRouter.parameters = [];
     const routeArgsInfo: RouterParamValue[] =
@@ -97,16 +107,13 @@ export class SwaggerMetaGenerator {
         webRouterInfo.method
       ) || [];
 
-    // 获取方法参数名
-    const argsNames = getParamNames(ins[webRouterInfo.method]);
-
     // 获取方法参数类型
     const paramTypes = getMethodParamTypes(ins, webRouterInfo.method);
     for (const routeArgs of routeArgsInfo) {
       const swaggerParameter = new SwaggerDocumentParameter();
       const argsApiInfo = swaggerApi?.params[routeArgs.index];
       swaggerParameter.description = argsApiInfo?.description;
-      swaggerParameter.name = argsNames[routeArgs.index];
+      swaggerParameter.name = argsApiInfo?.name || routeArgs?.propertyData;
       swaggerParameter.in = convertTypeToString(routeArgs.type);
       swaggerParameter.required = argsApiInfo?.required;
       swaggerParameter.deprecated = argsApiInfo?.deprecated;
@@ -138,7 +145,7 @@ export class SwaggerMetaGenerator {
       // add body
       if (swaggerParameter.in === 'body') {
         swaggerRouter.requestBody = {
-          description: argsApiInfo?.description || argsNames[routeArgs.index],
+          description: argsApiInfo?.description || routeArgs?.propertyData,
           content: {
             'application/json': {
               schema: swaggerParameter.schema,

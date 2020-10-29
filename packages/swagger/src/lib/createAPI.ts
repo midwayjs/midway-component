@@ -10,6 +10,7 @@ export interface ApiFormat {
 }
 
 export interface APIParamFormat {
+  name: string;
   description: string;
   required: boolean;
   deprecated: boolean;
@@ -72,14 +73,14 @@ export class SwaggerAPI {
     if (respondContentType) {
       this._response.push({
         status,
-        description: description || '' ,
+        description: description || '',
         content: respondContentType,
         ...options,
       });
     } else {
       this._response.push({
         status,
-        description: description || '' ,
+        description: description || '',
         ...options,
       });
     }
@@ -118,20 +119,28 @@ export function CreateApiDoc(data?: any): MethodDecorator | SwaggerAPI {
   }
 }
 
-export function CreateApiPropertyDoc(description: Partial<APIPropertyFormat>): PropertyDecorator;
-export function CreateApiPropertyDoc(description: string, options?: Partial<APIPropertyFormat>): PropertyDecorator;
-export function CreateApiPropertyDoc(description: any, options?: Partial<APIPropertyFormat>): PropertyDecorator {
+export function CreateApiPropertyDoc(
+  description: Partial<APIPropertyFormat>
+): PropertyDecorator;
+export function CreateApiPropertyDoc(
+  description: string,
+  options?: Partial<APIPropertyFormat>
+): PropertyDecorator;
+export function CreateApiPropertyDoc(
+  description: any,
+  options?: Partial<APIPropertyFormat>
+): PropertyDecorator {
   return (target: any, propertyKey: string) => {
     savePropertyMetadata(
       SWAGGER_DOCUMENT_KEY,
       {
         description,
-        ...options
+        ...options,
       },
       target,
       propertyKey
     );
-  }
+  };
 }
 
 function convertExample(example) {
