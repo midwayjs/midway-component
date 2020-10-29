@@ -37,7 +37,7 @@ export class SwaggerMetaGenerator {
     info.description = options?.description;
     info.termsOfService = options?.termsOfService;
     info.contact = options?.contact;
-    info.license = options?.license;
+    info.license = options?.license?.name ? options?.license : undefined;
     this.document.info = info;
   }
 
