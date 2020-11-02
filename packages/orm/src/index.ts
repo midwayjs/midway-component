@@ -9,6 +9,7 @@ import {
   Connection,
   getRepository,
 } from 'typeorm';
+import { ViewEntityOptions } from 'typeorm/decorator/options/ViewEntityOptions'
 import { saveModule, attachClassMetadata } from '@midwayjs/core';
 
 export const CONNECTION_KEY = 'orm:getConnection';
@@ -61,6 +62,55 @@ export function EntityModel(
       schema: options.schema ? options.schema : undefined,
       synchronize: options.synchronize,
       withoutRowid: options.withoutRowid,
+    });
+  };
+}
+
+/**
+ * ViewEntity - typeorm
+ * @param options ViewEntityOptions
+ */
+export function EntityView(options?: ViewEntityOptions): ClassDecorator;
+/**
+ * Entity - ViewEntity
+ * @param name string
+ * @param options ViewEntityOptions
+ */
+export function EntityView(
+  name?: string,
+  options?: ViewEntityOptions
+): ClassDecorator;
+/**
+ * Entity - typeorm
+ * @param nameOrOptions string|ViewEntityOptions
+ * @param maybeOptions ViewEntityOptions
+ */
+export function EntityView(
+  nameOrOptions?: string | ViewEntityOptions,
+  maybeOptions?: ViewEntityOptions
+): ClassDecorator {
+  const options =
+    (typeof nameOrOptions === 'object'
+      ? (nameOrOptions as ViewEntityOptions)
+      : maybeOptions) || {};
+  const name = typeof nameOrOptions === 'string' ? nameOrOptions : options.name;
+
+  return function (target) {
+    if (typeof target === 'function') {
+      saveModule(ENTITY_MODEL_KEY, target);
+    } else {
+      saveModule(ENTITY_MODEL_KEY, (target as object).constructor);
+    }
+
+    getMetadataArgsStorage().tables.push({
+      target: target,
+      name: name,
+      type: 'view',
+      database: options.database ? options.database : undefined,
+      schema: options.schema ? options.schema : undefined,
+      expression: options.expression ? options.expression: undefined,
+      materialized: options.materialized ? options.materialized: undefined,
+      synchronize: options.synchronize
     });
   };
 }
