@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/midwayjs/midway-component/compare/@midwayjs/orm@1.2.1...@midwayjs/orm@1.3.0) (2020-11-10)
+
+
+### Bug Fixes
+
+* npe and header render in swagger ([#15](https://github.com/midwayjs/midway-component/issues/15)) ([7b6b674](https://github.com/midwayjs/midway-component/commit/7b6b6743942897905cce91f657bebce989a646dc))
+
+
+### Features
+
+* support ViewEntity ([#14](https://github.com/midwayjs/midway-component/issues/14)) ([3723749](https://github.com/midwayjs/midway-component/commit/3723749490945b99fb2dbb635e4f6935fbaba5e5))
+
+
+
+
+
 ## [1.2.1](https://github.com/midwayjs/midway-component/compare/@midwayjs/orm@1.2.0...@midwayjs/orm@1.2.1) (2020-10-27)
 
 **Note:** Version bump only for package @midwayjs/orm

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.1...@midwayjs/swagger@1.0.2) (2020-11-10)
+
+
+### Bug Fixes
+
+* npe and header render in swagger ([#15](https://github.com/midwayjs/midway-component/issues/15)) ([7b6b674](https://github.com/midwayjs/midway-component/commit/7b6b6743942897905cce91f657bebce989a646dc))
+
+
+
+
+
 ## [1.0.1](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.0...@midwayjs/swagger@1.0.1) (2020-11-02)
 
 **Note:** Version bump only for package @midwayjs/swagger
