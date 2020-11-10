@@ -56,7 +56,10 @@ export class SwaggerAPI {
         ...options,
       });
     } else {
-      options.example = convertExample(description.example);
+      if (!options) {
+        options = {};
+      }
+      options.example = convertExample(description?.example);
       this._params.push(options);
     }
 
