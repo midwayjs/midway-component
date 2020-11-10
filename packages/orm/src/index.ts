@@ -9,7 +9,7 @@ import {
   Connection,
   getRepository,
 } from 'typeorm';
-import { ViewEntityOptions } from 'typeorm/decorator/options/ViewEntityOptions'
+import { ViewEntityOptions } from 'typeorm/decorator/options/ViewEntityOptions';
 import { saveModule, attachClassMetadata } from '@midwayjs/core';
 
 export const CONNECTION_KEY = 'orm:getConnection';
@@ -108,9 +108,9 @@ export function EntityView(
       type: 'view',
       database: options.database ? options.database : undefined,
       schema: options.schema ? options.schema : undefined,
-      expression: options.expression ? options.expression: undefined,
-      materialized: options.materialized ? options.materialized: undefined,
-      synchronize: options.synchronize
+      expression: options.expression ? options.expression : undefined,
+      materialized: options.materialized ? options.materialized : undefined,
+      synchronize: options.synchronize,
     });
   };
 }

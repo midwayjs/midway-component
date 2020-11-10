@@ -164,7 +164,6 @@ export class SwaggerMetaGenerator {
       // 获取方法返回值
       swaggerRouter.responses[apiResponse.status] = {
         description: apiResponse?.description,
-        content: apiResponse?.content,
         headers: apiResponse?.headers,
       };
     }
