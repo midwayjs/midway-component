@@ -26,8 +26,12 @@ export interface APIPropertyFormat {
 export interface APIResponseFormat {
   status: string;
   description: string;
-  headers: any;
-  content: any;
+  headers: {
+    [name: string]: {
+      description?: string;
+      type?: string;
+    };
+  };
   example: any;
 }
 
@@ -74,18 +78,22 @@ export class SwaggerAPI {
   ): SwaggerAPI {
     const respondContentType = convertRespondType(respondType, options);
     if (respondContentType) {
-      this._response.push({
-        status,
-        description: description || '',
-        content: respondContentType,
-        ...options,
-      });
+      this._response.push(
+        convertRespondOptions({
+          status,
+          description: description || '',
+          content: respondContentType,
+          ...options,
+        })
+      );
     } else {
-      this._response.push({
-        status,
-        description: description || '',
-        ...options,
-      });
+      this._response.push(
+        convertRespondOptions({
+          status,
+          description: description || '',
+          ...options,
+        })
+      );
     }
 
     return this;
@@ -152,7 +160,7 @@ function convertExample(example) {
   }
 
   if (typeof example === 'object') {
-    return JSON.stringify(example, null, 2);
+    return JSON.stringify(example);
   }
 
   return example.toString();
@@ -274,4 +282,20 @@ function convertRespondType(
     default:
       return undefined;
   }
+}
+
+function convertRespondOptions(respond) {
+  if (respond.headers) {
+    for (const headerName in respond.headers) {
+      const originRespondHeader = respond.headers[headerName];
+      respond.headers[headerName] = {
+        description: originRespondHeader.description,
+        schema: {
+          type: originRespondHeader.type,
+        },
+      };
+    }
+  }
+
+  return respond;
 }
