@@ -61,6 +61,15 @@ export class UserController {
     .respond(200, '正常返回', 'text', {
       example: 'hello world'
     })
+    .respond(201, 'response a text data', 'text', {
+      headers: {
+        'x-schema': {
+          description: 'set a schema header',
+          type: 'string'
+        }
+      },
+      example: 'this is a reponse data'
+    })
     .respond(500, '抛出错误')
     .build()
 
