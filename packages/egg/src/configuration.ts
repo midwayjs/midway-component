@@ -7,9 +7,11 @@ import {
 } from '@midwayjs/faas-typings';
 import { EggApplication } from './application';
 import { ParentConfiguration } from '@midwayjs/egg-base-module';
+import { join } from 'path';
 
 @Configuration({
-  importConfigs: ['./config'],
+  namespace: 'egg',
+  importConfigs: [join(__dirname, 'config')],
 })
 export class ContainerConfiguration extends ParentConfiguration {
   @App()
