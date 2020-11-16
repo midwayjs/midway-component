@@ -8,9 +8,6 @@
     "@midwayjs/faas-typings": "^1.0.0",
     "egg": "^2.25.0"
   },
-  "peerDependencies": {
-    "@midwayjs/decorator": "^2.3.0"
-  },
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts"
@@ -18,6 +15,7 @@
   "devDependencies": {
     "@midwayjs/cli": "^1.0.0",
     "@midwayjs/core": "^2.3.0",
+    "@midwayjs/decorator": "^2.3.0",
     "@midwayjs/faas": "^1.0.0",
     "@midwayjs/serverless-invoke": "^1.0.0",
     "egg-mysql": "^3.0.0"
