@@ -52,12 +52,13 @@ export class SwaggerController {
     const resourceAbsolutePath = join(this.swaggerUiAssetPath, fileName);
 
     if (extname(fileName)) {
+      // 7 天内使用缓存
       if (this.app.getFrameworkType() === MidwayFrameworkType.WEB_EXPRESS) {
         this.ctx.res.type(extname(fileName));
-        this.ctx.res.set('cache-control', 'public, max-age=31536000');
+        this.ctx.res.set('cache-control', 'public, max-age=604800');
       } else {
         this.ctx.type = extname(fileName);
-        this.ctx.set('cache-control', 'public, max-age=31536000');
+        this.ctx.set('cache-control', 'public, max-age=604800');
       }
     }
 
