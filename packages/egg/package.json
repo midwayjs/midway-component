@@ -4,10 +4,12 @@
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@midwayjs/decorator": "^2.3.0",
     "@midwayjs/egg-base-module": "^1.1.0",
     "@midwayjs/faas-typings": "^1.0.0",
     "egg": "^2.25.0"
+  },
+  "peerDependencies": {
+    "@midwayjs/decorator": "^2.3.0"
   },
   "files": [
     "dist/**/*.js",
