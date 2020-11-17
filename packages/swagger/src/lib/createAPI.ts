@@ -186,7 +186,7 @@ function convertRespondType(
         'application/json': {
           schema: {
             type: 'object',
-            example: convertExample(options?.example),
+            example: options?.example,
           },
         },
       };
@@ -195,7 +195,7 @@ function convertRespondType(
         'application/json': {
           schema: {
             type: 'object',
-            example: convertExample(options?.example),
+            example: options?.example,
           },
         },
       };
