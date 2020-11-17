@@ -55,6 +55,30 @@ describe('/test/feature.test.ts', () => {
       expect(swaggerJSON.paths).toHaveProperty('/user/{userId}');
       expect(swaggerJSON.paths).toHaveProperty('/user/');
 
+      expect(swaggerJSON.paths['/list']['get']['tags'][0]).toEqual('default');
+      expect(swaggerJSON.paths['/list']['get']['parameters'].length).toEqual(2);
+      expect(swaggerJSON.paths['/list']['get']['parameters'][0]).toEqual({
+        'in': 'query',
+        'name': 'pageIdx',
+        'schema': {
+          'type': 'number'
+        }
+      });
+
+      expect(swaggerJSON.paths['/list']['get']['parameters'][1]).toEqual({
+        'in': 'query',
+        'name': 'pageSize',
+        'schema': {
+          'type': 'number'
+        }
+      });
+
+      // api
+      expect(swaggerData).toMatch('获取用户');
+      expect(swaggerData).toMatch('创建新用户');
+      // respond example
+      expect(swaggerData).toMatch('hello world');
+
       // components
       expect(swaggerJSON.components.schemas['UserDTO']).toEqual({
         'type': 'object',
