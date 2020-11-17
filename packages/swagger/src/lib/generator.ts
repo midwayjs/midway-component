@@ -165,6 +165,7 @@ export class SwaggerMetaGenerator {
       swaggerRouter.responses[apiResponse.status] = {
         description: apiResponse?.description,
         headers: apiResponse?.headers,
+        content: apiResponse?.content,
       };
     }
 

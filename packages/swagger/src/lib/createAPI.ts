@@ -32,6 +32,7 @@ export interface APIResponseFormat {
       type?: string;
     };
   };
+  content: any;
   example: any;
 }
 
