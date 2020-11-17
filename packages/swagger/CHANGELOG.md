@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.3](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.2...@midwayjs/swagger@1.0.3) (2020-11-17)
+
+
+### Bug Fixes
+
+* missing response content ([#17](https://github.com/midwayjs/midway-component/issues/17)) ([057a77b](https://github.com/midwayjs/midway-component/commit/057a77bbb81f94d50aa586f75dde717daee373d6))
+
+
+
+
+
 ## [1.0.2](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.1...@midwayjs/swagger@1.0.2) (2020-11-10)
 
 
