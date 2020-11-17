@@ -11,9 +11,7 @@
     "dist/**/*.d.ts"
   ],
   "devDependencies": {
-    "@midwayjs/cli": "^1.0.0",
-    "@midwayjs/core": "^2.3.0",
-    "egg": "^2.25.0"
+    "@midwayjs/cli": "^1.0.0"
   },
   "license": "MIT",
   "scripts": {
