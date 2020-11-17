@@ -63,7 +63,10 @@ export class SwaggerController {
     }
 
     if (fileName.indexOf('index.html') !== -1) {
-      const htmlContent = this.getSwaggerUIResource(resourceAbsolutePath, 'utf-8');
+      const htmlContent = this.getSwaggerUIResource(
+        resourceAbsolutePath,
+        'utf-8'
+      );
       return htmlContent.replace(
         'https://petstore.swagger.io/v2/swagger.json',
         '/swagger-ui/json'
