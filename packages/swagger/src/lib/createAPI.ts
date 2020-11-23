@@ -1,4 +1,4 @@
-import { savePropertyMetadata } from '@midwayjs/decorator';
+import { savePropertyMetadata, attachClassMetadata, getPropertyType } from '@midwayjs/decorator';
 
 export const SWAGGER_DOCUMENT_KEY = 'common:swagger_doc_api';
 
@@ -143,10 +143,14 @@ export function CreateApiPropertyDoc(
   options?: Partial<APIPropertyFormat>
 ): PropertyDecorator {
   return (target: any, propertyKey: string) => {
-    savePropertyMetadata(
+    const metadata = getPropertyType(target, propertyKey);
+    attachClassMetadata(
       SWAGGER_DOCUMENT_KEY,
       {
         description,
+        type: metadata.name,
+        isBaseType: metadata.isBaseType,
+        originDesign: metadata.originDesign,
         ...options,
       },
       target,
