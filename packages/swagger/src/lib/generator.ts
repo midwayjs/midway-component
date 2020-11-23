@@ -5,7 +5,6 @@ import {
   getMethodParamTypes,
   getPropertyDataFromClass,
   getPropertyMetadata,
-  getPropertyType,
   isClass,
   RouteParamTypes,
   RouterOption,
@@ -180,7 +179,16 @@ export class SwaggerMetaGenerator {
     swaggerDefinition.name = definitionClass.name;
     swaggerDefinition.type = 'object';
 
-    const target = new definitionClass();
+    const properties = getClassMetadata(SWAGGER_DOCUMENT_KEY, definitionClass);
+    for (const propertyName in properties) {
+      swaggerDefinition.properties[propertyName] = {
+        type: properties[propertyName].type,
+        description: properties[propertyName].description,
+        example: properties[propertyName].example,
+      };
+    }
+
+    // for rule decorator
     const rules = getClassMetadata(RULES_KEY, definitionClass);
     if (rules) {
       const properties = Object.keys(rules);
@@ -189,22 +197,27 @@ export class SwaggerMetaGenerator {
         if (rules[property]?._flags?.presence === 'required') {
           swaggerDefinition.required.push(property);
         }
-        const type = getPropertyType(target, property);
         // get property description
         const propertyInfo: APIParamFormat = getPropertyMetadata(
           SWAGGER_DOCUMENT_KEY,
           definitionClass,
           property
         );
-        swaggerDefinition.properties[property] = {
-          type: convertSchemaType(type.name),
-          description: propertyInfo?.description,
-          example: propertyInfo?.example,
-        };
+        mixWhenPropertyEmpty(swaggerDefinition.properties, propertyInfo);
       }
     }
-
     this.document.definitions.push(swaggerDefinition);
+
+    // DTO
+    for (const key in properties) {
+      // 必须加了属性装饰器
+      if (properties[key].originDesign && !properties[key].isBaseType) {
+        this.generateSwaggerDefinition(properties[key].originDesign);
+        // 把复杂类型属性指向新的定义
+        swaggerDefinition.properties[key] = {};
+        swaggerDefinition.properties[key]['$ref'] = '#/components/schemas/'+ properties[key].type;
+      }
+    }
   }
 }
 
@@ -262,5 +275,13 @@ function convertSchemaType(value) {
       return 'string';
     default:
       return 'object';
+  }
+}
+
+function mixWhenPropertyEmpty(target, source) {
+  for (const key in source) {
+    if(!target[key] && source[key]) {
+      target[key] = source[key];
+    }
   }
 }

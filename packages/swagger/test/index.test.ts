@@ -29,7 +29,6 @@ describe('/test/feature.test.ts', () => {
       const result = await createHttpRequest(app).get('/swagger-ui/json');
       expect(result.type).toEqual('application/json');
 
-
       const swaggerData = result.text;
       const swaggerJSON = JSON.parse(swaggerData);
       // info check
@@ -93,8 +92,7 @@ describe('/test/feature.test.ts', () => {
             'description': '年龄'
           },
           'school': {
-            'type': 'object',
-            'description': '学校信息'
+            '$ref': '#/components/schemas/SchoolDTO',
           }
         },
         'required': [
@@ -102,6 +100,13 @@ describe('/test/feature.test.ts', () => {
           'school'
         ]
       });
+
+      // DTO args
+      expect(swaggerData).toMatch('年龄');
+      expect(swaggerData).not.toMatch('学校信息');
+      expect(swaggerData).toMatch('标题参数');
+      // expect(swaggerData).toMatch('描述参数');
+      // expect(swaggerData).toMatch('父级id');
     });
   });
 

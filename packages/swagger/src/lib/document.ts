@@ -167,7 +167,8 @@ export class SwaggerDefinition {
     return {
       type: this.type,
       properties: this.properties,
-      required: this.required,
+      required: this.required.length ? this.required: undefined,
     };
   }
 }
+
