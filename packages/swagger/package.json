@@ -26,5 +26,6 @@
   "repository": {
     "type": "git",
     "url": "http://github.com/midwayjs/midway-component.git"
-  }
+  },
+  "dependencies": {}
 }

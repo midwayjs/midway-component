@@ -1,4 +1,8 @@
-import { savePropertyMetadata, attachClassMetadata, getPropertyType } from '@midwayjs/decorator';
+import {
+  savePropertyMetadata,
+  attachClassMetadata,
+  getPropertyType,
+} from '@midwayjs/decorator';
 
 export const SWAGGER_DOCUMENT_KEY = 'common:swagger_doc_api';
 
@@ -32,6 +36,7 @@ export interface APIResponseFormat {
       type?: string;
     };
   };
+  properties: any;
   content: any;
   example: any;
 }
@@ -159,16 +164,66 @@ export function CreateApiPropertyDoc(
   };
 }
 
-function convertExample(example) {
+function convertExample(example: any, respondType?: string) {
   if (example === null || example === undefined) {
     return undefined;
   }
 
-  if (typeof example === 'object') {
-    return JSON.stringify(example);
+  switch (respondType) {
+    case 'object':
+    case 'json':
+    case 'boolean':
+    case 'number':
+      return example;
   }
 
   return example.toString();
+}
+
+function convertProperties(example: any, properties?: any) {
+  if (!example && !properties) {
+    return undefined;
+  }
+
+  if (!properties) {
+    properties = {};
+    const exampleKeys = Object.keys(example);
+
+    for (let i = 0; i < exampleKeys.length; i++) {
+      const value = example[exampleKeys[i]];
+      const valueType = typeof value;
+
+      switch (valueType) {
+        case 'boolean':
+        case 'number':
+        case 'string':
+          properties[exampleKeys[i]] = {
+            type: valueType,
+          };
+          break;
+        case 'object':
+          if (Array.isArray(value)) {
+            properties[exampleKeys[i]] = {
+              type: 'array',
+              items: {
+                type: typeof value,
+                properties: convertProperties(value[0]),
+              },
+            };
+          } else {
+            properties[exampleKeys[i]] = {
+              type: 'object',
+              properties: convertProperties(example[exampleKeys[i]]),
+            };
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
+    return properties;
+  }
 }
 
 function convertRespondType(
@@ -181,7 +236,7 @@ function convertRespondType(
         'text/plain': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -190,7 +245,8 @@ function convertRespondType(
         'application/json': {
           schema: {
             type: 'object',
-            example: convertExample(options?.example),
+            properties: convertProperties(options?.example, options.properties),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -199,7 +255,8 @@ function convertRespondType(
         'application/json': {
           schema: {
             type: 'object',
-            example: convertExample(options?.example),
+            properties: convertProperties(options?.example, options.properties),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -208,7 +265,7 @@ function convertRespondType(
         'text/plain': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -217,7 +274,7 @@ function convertRespondType(
         'text/plain': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -226,7 +283,7 @@ function convertRespondType(
         'text/html': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -235,7 +292,7 @@ function convertRespondType(
         'text/css': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -244,7 +301,7 @@ function convertRespondType(
         'application/javascript': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -253,7 +310,7 @@ function convertRespondType(
         'image/svg+xml': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -262,7 +319,7 @@ function convertRespondType(
         'image/gif': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -271,7 +328,7 @@ function convertRespondType(
         'image/jpeg': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
@@ -280,7 +337,7 @@ function convertRespondType(
         'mage/png': {
           schema: {
             type: 'string',
-            example: convertExample(options?.example),
+            example: convertExample(options?.example, respondType),
           },
         },
       };
