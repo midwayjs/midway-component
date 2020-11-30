@@ -221,9 +221,9 @@ function convertProperties(example: any, properties?: any) {
           break;
       }
     }
-
-    return properties;
   }
+
+  return properties;
 }
 
 function convertRespondType(
