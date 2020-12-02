@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.5](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.4...@midwayjs/swagger@1.0.5) (2020-12-02)
+
+
+### Bug Fixes
+
+* swagger display problem when reponse=object、json ([#21](https://github.com/midwayjs/midway-component/issues/21)) ([2f65f2c](https://github.com/midwayjs/midway-component/commit/2f65f2c4334539fcf55fd5fd014646b12de35aa9))
+
+
+
+
+
 ## [1.0.4](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.3...@midwayjs/swagger@1.0.4) (2020-11-23)
 
 

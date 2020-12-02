@@ -1,6 +1,6 @@
 {
   "name": "@midwayjs/swagger",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/index",
   "typings": "dist/index.d.ts",
   "files": [
@@ -26,6 +26,5 @@
   "repository": {
     "type": "git",
     "url": "http://github.com/midwayjs/midway-component.git"
-  },
-  "dependencies": {}
+  }
 }
