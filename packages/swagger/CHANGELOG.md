@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.6](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.5...@midwayjs/swagger@1.0.6) (2020-12-09)
+
+
+### Bug Fixes
+
+* array type with rule decorator ([#22](https://github.com/midwayjs/midway-component/issues/22)) ([f3b1164](https://github.com/midwayjs/midway-component/commit/f3b1164381b5c02b1d1192acfaf30f01bb34650a))
+
+
+
+
+
 ## [1.0.5](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.4...@midwayjs/swagger@1.0.5) (2020-12-02)
 
 
