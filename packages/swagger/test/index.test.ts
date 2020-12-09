@@ -105,8 +105,8 @@ describe('/test/feature.test.ts', () => {
       expect(swaggerData).toMatch('年龄');
       expect(swaggerData).not.toMatch('学校信息');
       expect(swaggerData).toMatch('标题参数');
-      // expect(swaggerData).toMatch('描述参数');
-      // expect(swaggerData).toMatch('父级id');
+      expect(swaggerData).toMatch('UpdateDTO');
+      expect(swaggerData).toMatch('"roles":{"type":"array","items":{"type":"string"}}');
     });
   });
 

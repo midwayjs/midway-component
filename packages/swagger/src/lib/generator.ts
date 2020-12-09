@@ -198,12 +198,16 @@ export class SwaggerMetaGenerator {
           swaggerDefinition.required.push(property);
         }
         // get property description
-        const propertyInfo: APIParamFormat = getPropertyMetadata(
+        let propertyInfo: APIParamFormat = getPropertyMetadata(
           SWAGGER_DOCUMENT_KEY,
           definitionClass,
           property
         );
-        mixWhenPropertyEmpty(swaggerDefinition.properties, propertyInfo);
+        if (!propertyInfo) {
+          propertyInfo = convertJoiSchemaType(rules[property]);
+        }
+        swaggerDefinition.properties[property] = swaggerDefinition.properties[property] || {};
+        mixWhenPropertyEmpty(swaggerDefinition.properties[property], propertyInfo);
       }
     }
     this.document.definitions.push(swaggerDefinition);
@@ -284,4 +288,17 @@ function mixWhenPropertyEmpty(target, source) {
       target[key] = source[key];
     }
   }
+}
+
+function convertJoiSchemaType(joiSchema)  {
+  if (joiSchema.type === 'array') {
+    return {
+      type: joiSchema.type,
+      items: convertJoiSchemaType(joiSchema['$_terms'].items[0]),
+    }
+  }
+
+  return {
+    type: joiSchema.type
+  };
 }

@@ -12,6 +12,8 @@ import {
   Rule,
   RuleType,
   Query,
+  Patch,
+  Validate
 } from '@midwayjs/decorator';
 import { UserService } from '../service/user';
 import { IMidwayKoaContext } from '@midwayjs/koa';
@@ -38,6 +40,33 @@ export class UserDTO {
   @CreateApiPropertyDoc('学校信息')
   @Rule(SchoolDTO)
   school: SchoolDTO;
+}
+
+
+/**
+ * 更新管理员参数
+ */
+export class UpdateDTO {
+  @Rule(RuleType.string().trim().max(10).required())
+  id: string;
+
+  @Rule(RuleType.string().trim().min(5).max(190).required())
+  username: string;
+
+  @Rule(RuleType.string().trim().min(5).max(255).required())
+  name: string;
+
+  @Rule(RuleType.string().trim().max(255).optional())
+  avatar?: string;
+
+  @Rule(RuleType.string().trim().min(5).max(60).optional())
+  password?: string;
+
+  @Rule(RuleType.array().items(RuleType.string().trim().max(10)).optional())
+  roles?: string[];
+
+  @Rule(RuleType.array().items(RuleType.string().trim().max(10)).optional())
+  permissions?: string[];
 }
 
 @Provide()
@@ -127,6 +156,11 @@ export class UserController {
         address: 'a'
       }
     };
+  }
+
+  @Patch('/update')
+  @Validate()
+  async update(@Body(ALL) params: UpdateDTO) {
   }
 
 }
