@@ -14,12 +14,13 @@ export interface ApiFormat {
 }
 
 export interface APIParamFormat {
-  name: string;
-  description: string;
-  required: boolean;
-  deprecated: boolean;
-  allowEmptyValue: boolean;
-  example: any;
+  name?: string;
+  type?: string;
+  description?: string;
+  required?: boolean;
+  deprecated?: boolean;
+  allowEmptyValue?: boolean;
+  example?: any;
 }
 
 export interface APIPropertyFormat {
