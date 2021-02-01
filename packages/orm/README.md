@@ -71,20 +71,23 @@ export class User {
 
 See [TypeORM Entity](https://typeorm.io/#/entities) for more informations.
 
-## Use Model
+## Inject Repo / EntityManager
 
-in code files
+In code files
 
 ```ts
-import { InjectEntityModel } from '@midwayjs/orm';
+import { InjectEntityModel, InjectEntityManager } from '@midwayjs/orm';
 import { User } from './model/user';
-import { Repository } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 
 @Provide()
 export class IndexHandler {
 
   @InjectEntityModel(User)
   userModel: Repository<User>;
+
+  @InjectEntityManager()
+  entityManager: EntityManager;
 
   @Func('index.handler')
   async handler() {
@@ -103,4 +106,4 @@ export class IndexHandler {
 
 ## Example
 
-We provide a sample based on SQLite3 [here](examples/).
+We provide a sample based on SQLite3 [here](https://github.com/midwayjs/midway-examples/tree/master/v2/demo-typeorm).

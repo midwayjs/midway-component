@@ -6,12 +6,14 @@ import {
   getRepository,
   ConnectionOptions,
   Connection,
+  getManager,
 } from 'typeorm';
 import {
   ENTITY_MODEL_KEY,
   EVENT_SUBSCRIBER_KEY,
   CONNECTION_KEY,
   ORM_MODEL_KEY,
+  ENTITY_MANAGER_KEY,
 } from '.';
 import { ORM_HOOK_KEY, OrmConnectionHook } from './hook';
 import { join } from 'path';
@@ -33,6 +35,14 @@ export class OrmConfiguration implements ILifeCycle {
         // return getConnection(key.connectionName).getRepository(key.modelKey);
         const repo = getRepository(key.modelKey, key.connectionName);
         return repo;
+      }
+    );
+
+    (container as any).registerDataHandler(
+      ENTITY_MANAGER_KEY,
+      (key: { modelKey; connectionName }) => {
+        const entityManager = getManager(key.connectionName);
+        return entityManager;
       }
     );
 
