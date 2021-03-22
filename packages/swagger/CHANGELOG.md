@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.7](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.6...@midwayjs/swagger@1.0.7) (2021-03-22)
+
+
+### Bug Fixes
+
+* [#26](https://github.com/midwayjs/midway-component/issues/26) check the route info is iterable or not ([#27](https://github.com/midwayjs/midway-component/issues/27)) ([f0d4798](https://github.com/midwayjs/midway-component/commit/f0d479832aef0b558bfeac04b32a28cc83192810))
+
+
+
+
+
 ## [1.0.6](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.5...@midwayjs/swagger@1.0.6) (2020-12-09)
 
 
