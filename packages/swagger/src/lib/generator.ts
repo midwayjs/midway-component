@@ -65,13 +65,15 @@ export class SwaggerMetaGenerator {
       module
     );
 
-    for (const webRouter of webRouterInfo) {
-      let url = (prefix + webRouter.path).replace('//', '/');
-      url = replaceUrl(url, parseParamsInPath(url));
-      const router = new SwaggerDocumentRouter(webRouter.requestMethod, url);
-      router.tags = [tag.name];
-      this.generateRouter(webRouter, router, module);
-      this.document.addRouter(router);
+    if (webRouterInfo && typeof webRouterInfo[Symbol.iterator] === 'function') {
+      for (const webRouter of webRouterInfo) {
+        let url = (prefix + webRouter.path).replace('//', '/');
+        url = replaceUrl(url, parseParamsInPath(url));
+        const router = new SwaggerDocumentRouter(webRouter.requestMethod, url);
+        router.tags = [tag.name];
+        this.generateRouter(webRouter, router, module);
+        this.document.addRouter(router);
+      }
     }
   }
 
