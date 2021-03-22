@@ -4,6 +4,7 @@ import { IMidwayKoaApplication } from '@midwayjs/koa';
 describe('/test/feature.test.ts', () => {
 
   describe('test new features', () => {
+
     let app: IMidwayKoaApplication;
     beforeAll(async () => {
       app = await createApp('base-app', {}, '@midwayjs/koa');
@@ -36,7 +37,7 @@ describe('/test/feature.test.ts', () => {
       expect(swaggerData).toMatch('This is a swagger-ui for midwayjs project');
 
       // tag
-      expect(swaggerJSON.tags.length).toEqual(2);
+      expect(swaggerJSON.tags.length).toEqual(3);
       expect(swaggerJSON.tags).toContainEqual({
         'name': 'default',
         'description': 'default'
@@ -44,6 +45,10 @@ describe('/test/feature.test.ts', () => {
       expect(swaggerJSON.tags).toContainEqual({
         'name': 'user',
         'description': 'user'
+      });
+      expect(swaggerJSON.tags).toContainEqual({
+        'name': 'empty',
+        'description': 'empty'
       });
 
       // paths
@@ -53,6 +58,7 @@ describe('/test/feature.test.ts', () => {
       expect(swaggerJSON.paths).toHaveProperty('/login');
       expect(swaggerJSON.paths).toHaveProperty('/user/{userId}');
       expect(swaggerJSON.paths).toHaveProperty('/user/');
+      expect(swaggerJSON.paths).not.toHaveProperty('/empty/');
 
       expect(swaggerJSON.paths['/list']['get']['tags'][0]).toEqual('default');
       expect(swaggerJSON.paths['/list']['get']['parameters'].length).toEqual(2);
@@ -108,6 +114,7 @@ describe('/test/feature.test.ts', () => {
       expect(swaggerData).toMatch('UpdateDTO');
       expect(swaggerData).toMatch('"roles":{"type":"array","items":{"type":"string"}}');
     });
+
   });
 
 });
