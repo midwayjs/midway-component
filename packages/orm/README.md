@@ -2,7 +2,7 @@
 
 ## How to use
 
-in Configuration.ts file
+In `Configuration.ts` file:
 
 ```ts
 @Configuration({
@@ -13,17 +13,16 @@ in Configuration.ts file
     './config'
   ]
 })
-export class ContainerConfiguration {
-}
-
+export class ContainerConfiguration {}
 ```
 
 ## Configuration
 
-in config files
-
+In config files
 
 ```ts
+import { ConnectionOptions } from 'typeorm';
+
 export default {
   orm: {
     type: 'mysql',
@@ -34,7 +33,7 @@ export default {
     database: undefined,
     synchronize: true,
     logging: false,
- }
+ } as ConnectionOptions; // use ConnectionOptions type as restriction
 };
 ```
 
@@ -42,11 +41,13 @@ or
 
 ```ts
 export const orm = {
-  type: 'sqlite',  // or use mysql see typeorm docs
+  type: 'sqlite',
   database: join(__dirname, './test.sqlite'),
   logging: true,
 }
 ```
+
+See [TypeORM Connection Options](https://typeorm.io/#/connection-options) for more informations.
 
 ## Define EntityModel
 
@@ -55,8 +56,8 @@ export const orm = {
 import { EntityModel } from '@midwayjs/orm';
 import { PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
-@EntityModel('test_user')
-export class Photo {
+@EntityModel('test_user') // create a table named "test_user"
+export class User {
   @PrimaryGeneratedColumn({ name: "id" })
   id: number;
 
@@ -68,21 +69,25 @@ export class Photo {
 }
 ```
 
+See [TypeORM Entity](https://typeorm.io/#/entities) for more informations.
 
-## Use Model
+## Inject Repo / EntityManager
 
-in code files
+In code files
 
 ```ts
-import { InjectEntityModel } from '@midwayjs/orm';
+import { InjectEntityModel, InjectEntityManager } from '@midwayjs/orm';
 import { User } from './model/user';
-import { Repository } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 
 @Provide()
 export class IndexHandler {
 
   @InjectEntityModel(User)
   userModel: Repository<User>;
+
+  @InjectEntityManager()
+  entityManager: EntityManager;
 
   @Func('index.handler')
   async handler() {
@@ -98,3 +103,7 @@ export class IndexHandler {
   }
 }
 ```
+
+## Example
+
+We provide a sample based on SQLite3 [here](https://github.com/midwayjs/midway-examples/tree/master/v2/demo-typeorm).

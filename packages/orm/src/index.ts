@@ -16,6 +16,8 @@ export const CONNECTION_KEY = 'orm:getConnection';
 export const ENTITY_MODEL_KEY = 'entity_model_key';
 export const EVENT_SUBSCRIBER_KEY = 'event_subscriber_key';
 export const ORM_MODEL_KEY = '__orm_model_key__';
+export const ENTITY_MANAGER_KEY = 'entity_manager_key';
+
 /**
  * Entity - typeorm
  * @param options EntityOptions
@@ -49,7 +51,10 @@ export function EntityModel(
     if (typeof target === 'function') {
       saveModule(ENTITY_MODEL_KEY, target);
     } else {
-      saveModule(ENTITY_MODEL_KEY, (target as object).constructor);
+      saveModule(
+        ENTITY_MODEL_KEY,
+        (target as Record<string, unknown>).constructor
+      );
     }
 
     getMetadataArgsStorage().tables.push({
@@ -99,7 +104,10 @@ export function EntityView(
     if (typeof target === 'function') {
       saveModule(ENTITY_MODEL_KEY, target);
     } else {
-      saveModule(ENTITY_MODEL_KEY, (target as object).constructor);
+      saveModule(
+        ENTITY_MODEL_KEY,
+        (target as Record<string, unknown>).constructor
+      );
     }
 
     getMetadataArgsStorage().tables.push({
@@ -116,9 +124,28 @@ export function EntityView(
 }
 
 export function InjectEntityModel(modelKey?: any, connectionName = 'default') {
-  return (target, propertyKey: string) => {
+  return (target, propertyKey: string): void => {
     attachClassMetadata(
       ORM_MODEL_KEY,
+      {
+        key: {
+          modelKey,
+          connectionName,
+        },
+        propertyName: propertyKey,
+      },
+      target
+    );
+  };
+}
+
+export function InjectEntityManager(
+  modelKey?: any,
+  connectionName = 'default'
+) {
+  return (target, propertyKey: string): void => {
+    attachClassMetadata(
+      ENTITY_MANAGER_KEY,
       {
         key: {
           modelKey,
@@ -140,7 +167,10 @@ export function EventSubscriberModel(): ClassDecorator {
     if (typeof target === 'function') {
       saveModule(EVENT_SUBSCRIBER_KEY, target);
     } else {
-      saveModule(EVENT_SUBSCRIBER_KEY, (target as object).constructor);
+      saveModule(
+        EVENT_SUBSCRIBER_KEY,
+        (target as Record<string, unknown>).constructor
+      );
     }
 
     getMetadataArgsStorage().entitySubscribers.push({ target });
