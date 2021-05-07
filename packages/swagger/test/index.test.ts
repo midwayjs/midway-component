@@ -99,11 +99,15 @@ describe('/test/feature.test.ts', () => {
           },
           'school': {
             '$ref': '#/components/schemas/SchoolDTO',
-          }
+          },
+          'schoolList': {
+            '$ref': '#/components/schemas/Array',
+          },
         },
         'required': [
           'name',
-          'school'
+          'school',
+          'schoolList'
         ]
       });
 
