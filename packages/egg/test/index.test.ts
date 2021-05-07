@@ -3,6 +3,12 @@ import { join } from 'path';
 import * as assert from 'assert';
 
 describe('/test/index.test.ts', () => {
+
+  if (/^v10/.test(process.version)) {
+    it('skip node v10', () => {});
+    return;
+  }
+
   it('should use origin http trigger in ice + faas demo by args', async () => {
     process.env.MIDWAY_TS_MODE = 'true';
     const result: any = await invoke({

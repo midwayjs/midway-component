@@ -1,10 +1,5 @@
 import { App, Config, Configuration } from '@midwayjs/decorator';
-import { IMidwayCoreApplication } from '@midwayjs/core';
-import {
-  FaaSHTTPContext,
-  FaaSHTTPRequest,
-  FaaSHTTPResponse,
-} from '@midwayjs/faas-typings';
+import { IMidwayApplication } from '@midwayjs/core';
 import { EggApplication } from './application';
 import { ParentConfiguration } from '@midwayjs/egg-base-module';
 import { join } from 'path';
@@ -15,11 +10,7 @@ import { join } from 'path';
 })
 export class ContainerConfiguration extends ParentConfiguration {
   @App()
-  app: IMidwayCoreApplication & {
-    request: FaaSHTTPRequest;
-    response: FaaSHTTPResponse;
-    context: FaaSHTTPContext;
-  };
+  app: IMidwayApplication;
 
   @Config('eggPaths')
   eggPaths;
