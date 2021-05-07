@@ -13,6 +13,7 @@
   "devDependencies": {
     "@midwayjs/core": "^2.3.0",
     "@midwayjs/decorator": "^2.3.0",
+    "@midwayjs/mock": "^2.3.0",
     "sqlite3": "^5.0.0"
   },
   "author": {
