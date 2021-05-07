@@ -8,10 +8,8 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "stripInternal": true,
-    // TODO: enable strict checks
     "noImplicitReturns": false,
     "strict": false,
-    // TODO: Emit test files to outDir
     "noEmitOnError": false,
     "skipLibCheck": true
   },

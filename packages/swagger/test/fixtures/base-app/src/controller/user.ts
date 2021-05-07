@@ -40,6 +40,10 @@ export class UserDTO {
   @CreateApiPropertyDoc('学校信息')
   @Rule(SchoolDTO)
   school: SchoolDTO;
+
+  @CreateApiPropertyDoc('学校列表')
+  @Rule(SchoolDTO)
+  schoolList: SchoolDTO[];
 }
 
 
@@ -132,7 +136,8 @@ export class UserController {
       age: 18,
       school: {
         address: 'a'
-      }
+      },
+      schoolList: []
     };
   }
 
@@ -143,7 +148,8 @@ export class UserController {
       age: 18,
       school: {
         address: 'a'
-      }
+      },
+      schoolList: []
     };
   }
 
@@ -154,7 +160,8 @@ export class UserController {
       age: 18,
       school: {
         address: 'a'
-      }
+      },
+      schoolList: []
     };
   }
 
