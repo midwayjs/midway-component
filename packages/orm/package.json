@@ -11,9 +11,9 @@
     "dist/**/*.d.ts"
   ],
   "devDependencies": {
-    "@midwayjs/cli": "^1.0.0",
     "@midwayjs/core": "^2.3.0",
     "@midwayjs/decorator": "^2.3.0",
+    "@midwayjs/mock": "^2.3.0",
     "sqlite3": "^5.0.0"
   },
   "author": {
@@ -22,10 +22,9 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "midway-bin build -c",
-    "test": "midway-bin test --ts",
-    "cov": "midway-bin cov --ts",
-    "ci": "npm run test"
+    "build": "tsc",
+    "test": "node --require=ts-node/register ../../node_modules/.bin/jest",
+    "cov": "node --require=ts-node/register ../../node_modules/.bin/jest --coverage --forceExit"
   },
   "repository": {
     "type": "git",

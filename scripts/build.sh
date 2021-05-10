@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-lerna run build
-lerna exec -- rm -rf ./dist/.mwcc-cache
+lerna exec -- rm -rf ./dist
+lerna run build --concurrency=4

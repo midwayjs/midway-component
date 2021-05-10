@@ -4,20 +4,18 @@
   "version": "1.0.0",
   "devDependencies": {
     "@types/jest": "^26.0.10",
-    "@types/node": "^10.17.21",
+    "@types/node": "^15.0.1",
     "jest": "^26.4.0",
     "lerna": "^3.20.2",
     "lerna-relinker": "^1.4.0",
     "mwts": "^1.0.5",
-    "opencollective": "^1.0.3",
-    "opencollective-postinstall": "^2.0.2",
-    "ts-jest": "^26.2.0",
-    "typescript": "^3.8.3"
+    "ts-jest": "^26.5.5",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.0"
   },
   "scripts": {
     "test": "lerna run test",
-    "link": "lerna run link",
-    "cov": "lerna run cov",
+    "cov": "lerna run cov --concurrency=2 --stream",
     "ci": "npm run build && npm run cov",
     "purge": "npm run clean && rm -rf node_modules",
     "reset": "npm run purge && npm i && npm run ci",
@@ -29,7 +27,6 @@
     "clean": "lerna clean --yes && rm -rf ./packages/**/package-lock.json && rm -f package-lock.json",
     "build": "sh scripts/build.sh",
     "authors": "git log --format='%aN <%aE>' | sort -u > AUTHORS",
-    "postinstall": "opencollective-postinstall",
     "lint": "lerna exec mwts check",
     "lint:fix": "lerna exec mwts fix"
   },
@@ -47,33 +44,5 @@
   "engines": {
     "node": ">= 10"
   },
-  "license": "MIT",
-  "collective": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/midway-faas"
-  },
-  "nyc": {
-    "include": [
-      "packages/**/src/*.ts",
-      "packages/**/src/**/*.ts"
-    ],
-    "exclude": [
-      "**/typings",
-      "**/*.d.ts",
-      "**/dist",
-      "**/test",
-      "**/src/domain.ts",
-      "**/src/interface.ts"
-    ],
-    "extension": [
-      ".ts",
-      ".js"
-    ],
-    "reporter": [
-      "json",
-      "html"
-    ],
-    "all": true
-  },
-  "dependencies": {}
+  "license": "MIT"
 }

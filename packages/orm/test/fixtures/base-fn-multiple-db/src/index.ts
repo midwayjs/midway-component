@@ -1,5 +1,4 @@
-import { FunctionHandler, FaaSContext } from '@midwayjs/faas';
-import { Provide, Inject, Func } from '@midwayjs/decorator';
+import { Provide, Inject } from '@midwayjs/decorator';
 import { InjectEntityModel } from '../../../../src';
 import { User } from './model/user';
 import { Repository } from 'typeorm';
@@ -7,9 +6,9 @@ import * as assert from 'assert';
 // import { BaseFnMultipleHook } from './hook';
 
 @Provide()
-export class IndexHandler implements FunctionHandler {
+export class IndexHandler{
   @Inject()
-  ctx: FaaSContext;
+  ctx;
 
   @InjectEntityModel(User, 'test')
   testUserModel: Repository<User>;
@@ -17,8 +16,7 @@ export class IndexHandler implements FunctionHandler {
   @InjectEntityModel(User)
   defaultUserModel: Repository<User>;
 
-  @Func('index.handler')
-  async handler() {
+  async run() {
     const u = new User();
     u.name = 'oneuser1';
 

@@ -208,8 +208,12 @@ export class SwaggerMetaGenerator {
         if (!propertyInfo) {
           propertyInfo = convertJoiSchemaType(rules[property]);
         }
-        swaggerDefinition.properties[property] = swaggerDefinition.properties[property] || {};
-        mixWhenPropertyEmpty(swaggerDefinition.properties[property], propertyInfo);
+        swaggerDefinition.properties[property] =
+          swaggerDefinition.properties[property] || {};
+        mixWhenPropertyEmpty(
+          swaggerDefinition.properties[property],
+          propertyInfo
+        );
       }
     }
     this.document.definitions.push(swaggerDefinition);
@@ -221,7 +225,8 @@ export class SwaggerMetaGenerator {
         this.generateSwaggerDefinition(properties[key].originDesign);
         // 把复杂类型属性指向新的定义
         swaggerDefinition.properties[key] = {};
-        swaggerDefinition.properties[key]['$ref'] = '#/components/schemas/'+ properties[key].type;
+        swaggerDefinition.properties[key]['$ref'] =
+          '#/components/schemas/' + properties[key].type;
       }
     }
   }
@@ -286,21 +291,21 @@ function convertSchemaType(value) {
 
 function mixWhenPropertyEmpty(target, source) {
   for (const key in source) {
-    if(!target[key] && source[key]) {
+    if (!target[key] && source[key]) {
       target[key] = source[key];
     }
   }
 }
 
-function convertJoiSchemaType(joiSchema)  {
+function convertJoiSchemaType(joiSchema) {
   if (joiSchema.type === 'array') {
     return {
       type: joiSchema.type,
       items: convertJoiSchemaType(joiSchema['$_terms'].items[0]),
-    }
+    };
   }
 
   return {
-    type: joiSchema.type
+    type: joiSchema.type,
   };
 }

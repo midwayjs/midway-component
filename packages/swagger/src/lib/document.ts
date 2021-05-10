@@ -104,8 +104,8 @@ export class SwaggerDocumentRouter {
   consumes: string[];
   produces: string[];
   parameters: SwaggerDocumentParameter[];
-  requestBody: object;
-  responses: object;
+  requestBody: Record<string, unknown>;
+  responses: Record<string, unknown>;
   security: [];
 
   constructor(method, url) {
@@ -167,8 +167,7 @@ export class SwaggerDefinition {
     return {
       type: this.type,
       properties: this.properties,
-      required: this.required.length ? this.required: undefined,
+      required: this.required.length ? this.required : undefined,
     };
   }
 }
-

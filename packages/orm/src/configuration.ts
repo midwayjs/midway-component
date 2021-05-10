@@ -1,5 +1,5 @@
 import { ILifeCycle, IMidwayContainer } from '@midwayjs/core';
-import { Configuration, listModule, Config } from '@midwayjs/decorator';
+import { Configuration, listModule, Config, Logger } from '@midwayjs/decorator';
 import {
   createConnection,
   getConnection,
@@ -25,6 +25,9 @@ import { join } from 'path';
 export class OrmConfiguration implements ILifeCycle {
   @Config('orm')
   private ormConfig: any;
+
+  @Logger('coreLogger')
+  logger: any;
 
   private connectionNames: string[] = [];
 
@@ -62,7 +65,9 @@ export class OrmConfiguration implements ILifeCycle {
         if (conn.isConnected) {
           isConnected = true;
         }
-      } catch {}
+      } catch (err) {
+        this.logger.error('[orm]: conneection got error', err);
+      }
       if (!isConnected) {
         const rtOpt = await this.beforeCreate(container, connectionOption);
         const con = await createConnection(rtOpt);

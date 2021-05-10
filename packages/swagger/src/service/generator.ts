@@ -1,12 +1,18 @@
-import { Provide, Scope, ScopeEnum, CONTROLLER_KEY, listModule, Config } from '@midwayjs/decorator';
+import {
+  Provide,
+  Scope,
+  ScopeEnum,
+  CONTROLLER_KEY,
+  listModule,
+  Config,
+} from '@midwayjs/decorator';
 import { SwaggerMetaGenerator } from '../lib/generator';
 import { SwaggerController } from '../controller/swagger';
-import { SwaggerGeneratorInfoOptions } from "../interface";
+import { SwaggerGeneratorInfoOptions } from '../interface';
 
 @Provide('swaggerGenerator')
 @Scope(ScopeEnum.Singleton)
 export class SwaggerGenerator {
-
   @Config('swagger')
   swaggerConfig: SwaggerGeneratorInfoOptions;
 

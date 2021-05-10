@@ -4,7 +4,7 @@ import * as extend from 'extend2';
 
 export abstract class ParentConfiguration {
   app: any;
-
+  eggApp;
   eggPaths;
 
   async onReady() {
@@ -33,6 +33,10 @@ export abstract class ParentConfiguration {
     );
 
     await this.afterEggAppAssign(eggApp);
+  }
+
+  async onStop() {
+    await this.eggApp.close();
   }
 
   abstract getEggApplication();
