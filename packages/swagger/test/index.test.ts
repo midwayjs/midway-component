@@ -101,8 +101,17 @@ describe('/test/feature.test.ts', () => {
             '$ref': '#/components/schemas/SchoolDTO',
           },
           'schoolList': {
-            '$ref': '#/components/schemas/Array',
+            'type': 'array',
+            'description': '学校列表',
+            'items': {
+              '$ref': '#/components/schemas/SchoolDTO'
+            }
           },
+          type:{
+            'type': 'number',
+            'description':'类型',
+            'enum': [1,2,3]
+          }
         },
         'required': [
           'name',
@@ -116,7 +125,8 @@ describe('/test/feature.test.ts', () => {
       expect(swaggerData).not.toMatch('学校信息');
       expect(swaggerData).toMatch('标题参数');
       expect(swaggerData).toMatch('UpdateDTO');
-      expect(swaggerData).toMatch('"roles":{"type":"array","items":{"type":"string"}}');
+      expect(swaggerData).toMatch('"roles":{"type":"array","items":{"type":"string","maxLength":10}}');
+      expect(swaggerData).not.toMatch('testAttr')
     });
 
   });

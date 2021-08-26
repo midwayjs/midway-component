@@ -33,17 +33,23 @@ export class UserDTO {
   @Rule(RuleType.string().required())
   name: string;
 
-  @CreateApiPropertyDoc('年龄')
-  @Rule(RuleType.number())
+  // @CreateApiPropertyDoc('年龄')
+  @Rule(RuleType.number().description('年龄'))
   age: number;
 
-  @CreateApiPropertyDoc('学校信息')
+  // @CreateApiPropertyDoc('学校信息')
   @Rule(SchoolDTO)
   school: SchoolDTO;
 
   @CreateApiPropertyDoc('学校列表')
   @Rule(SchoolDTO)
   schoolList: SchoolDTO[];
+
+  @Rule(RuleType.number().valid(1,2,3).description('类型'))
+  type?: number;
+
+  @Rule(RuleType.number().forbidden())
+  testAttr?: number;
 }
 
 

@@ -12,6 +12,7 @@ import {
   RULES_KEY,
   WEB_ROUTER_KEY,
   WEB_ROUTER_PARAM_KEY,
+  getClassExtendedMetadata,
 } from '@midwayjs/decorator';
 import {
   SwaggerDefinition,
@@ -184,14 +185,14 @@ export class SwaggerMetaGenerator {
     const properties = getClassMetadata(SWAGGER_DOCUMENT_KEY, definitionClass);
     for (const propertyName in properties) {
       swaggerDefinition.properties[propertyName] = {
-        type: properties[propertyName].type,
+        type: properties[propertyName].type.toLowerCase(),
         description: properties[propertyName].description,
         example: properties[propertyName].example,
       };
     }
 
     // for rule decorator
-    const rules = getClassMetadata(RULES_KEY, definitionClass);
+    const rules = getClassExtendedMetadata(RULES_KEY, definitionClass);
     if (rules) {
       const properties = Object.keys(rules);
       for (const property of properties) {
@@ -199,6 +200,7 @@ export class SwaggerMetaGenerator {
         if (rules[property]?._flags?.presence === 'required') {
           swaggerDefinition.required.push(property);
         }
+        // 没找到这行代码对应的装饰器
         // get property description
         let propertyInfo: APIParamFormat = getPropertyMetadata(
           SWAGGER_DOCUMENT_KEY,
@@ -206,14 +208,19 @@ export class SwaggerMetaGenerator {
           property
         );
         if (!propertyInfo) {
-          propertyInfo = convertJoiSchemaType(rules[property]);
+          propertyInfo = this.generateSwaggerByJoiProperty(
+            rules[property],
+            joinCamel(definitionClass.name, property)
+          );
         }
-        swaggerDefinition.properties[property] =
-          swaggerDefinition.properties[property] || {};
-        mixWhenPropertyEmpty(
-          swaggerDefinition.properties[property],
-          propertyInfo
-        );
+        if (swaggerDefinition.properties[property] && !propertyInfo?.$ref) {
+          mixWhenPropertyEmpty(
+            swaggerDefinition.properties[property],
+            propertyInfo
+          );
+        } else {
+          swaggerDefinition.properties[property] = propertyInfo;
+        }
       }
     }
     this.document.definitions.push(swaggerDefinition);
@@ -221,7 +228,11 @@ export class SwaggerMetaGenerator {
     // DTO
     for (const key in properties) {
       // 必须加了属性装饰器
-      if (properties[key].originDesign && !properties[key].isBaseType) {
+      if (
+        !rules?.[key] &&
+        properties[key].originDesign &&
+        !properties[key].isBaseType
+      ) {
         this.generateSwaggerDefinition(properties[key].originDesign);
         // 把复杂类型属性指向新的定义
         swaggerDefinition.properties[key] = {};
@@ -230,6 +241,85 @@ export class SwaggerMetaGenerator {
       }
     }
   }
+
+  generateSwaggerByJoiProperty(joiSchema, pathName?: string) {
+    const describe = joiSchema.describe();
+    if (describe.flags?.presence === 'forbidden') {
+      return undefined;
+    }
+    let define: any = {
+      type: describe.type,
+      default: describe.flags?.default,
+      description: describe.flags?.description,
+      example: describe.examples?.join(' '),
+    };
+
+    let min;
+    let max;
+    for (const r of describe.rules || []) {
+      if (r.name === 'min' && r.args) {
+        min = r.args.limit;
+      } else if (r.name === 'max') {
+        max = r.args.limit;
+      }
+    }
+    if (describe.flags?.only) {
+      define.enum = describe.allow;
+    }
+    if (describe.invalid) {
+      define.not = { enum: describe.invalid };
+    }
+
+    switch (describe.type) {
+      case 'string':
+        define.minLength = min;
+        define.maxLength = max;
+        break;
+      case 'number':
+        define.minimum = min;
+        define.maximum = max;
+        if (describe.rules?.some(r => r.name === 'integer')) {
+          define.type = 'integer';
+        }
+        break;
+      case 'date':
+        define.type = 'string';
+        define.format = 'date-time';
+        break;
+      case 'object': {
+        const swaggerDefinition = new SwaggerDefinition();
+        const schemaMeta = describe.metas?.find(m => Boolean(m.id));
+        swaggerDefinition.name = schemaMeta?.id || pathName;
+        swaggerDefinition.type = 'object';
+        swaggerDefinition.required = [];
+        for (const prop of joiSchema.$_terms?.keys) {
+          if (prop.schema._flags?.presence === 'required') {
+            swaggerDefinition.required.push(prop.key);
+          }
+          swaggerDefinition.properties[prop.key] =
+            this.generateSwaggerByJoiProperty(
+              prop.schema,
+              joinCamel(pathName, prop.key)
+            );
+        }
+        this.document.definitions.push(swaggerDefinition);
+        define = { $ref: '#/components/schemas/' + swaggerDefinition.name };
+        break;
+      }
+      case 'array':
+        define.minItems = min;
+        define.maxItems = max;
+        define.items = this.generateSwaggerByJoiProperty(
+          joiSchema.$_terms.items[0],
+          pathName
+        );
+    }
+    return define;
+  }
+}
+
+function joinCamel(word1, word2) {
+  return `${word1}${word2[0].toUpperCase()}${word2.slice(1)}`;
 }
 
 function convertTypeToString(type: RouteParamTypes) {
@@ -295,17 +385,4 @@ function mixWhenPropertyEmpty(target, source) {
       target[key] = source[key];
     }
   }
-}
-
-function convertJoiSchemaType(joiSchema) {
-  if (joiSchema.type === 'array') {
-    return {
-      type: joiSchema.type,
-      items: convertJoiSchemaType(joiSchema['$_terms'].items[0]),
-    };
-  }
-
-  return {
-    type: joiSchema.type,
-  };
 }

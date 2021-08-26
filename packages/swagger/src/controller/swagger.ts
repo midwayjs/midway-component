@@ -31,7 +31,9 @@ export class SwaggerController {
 
   constructor() {
     const { getAbsoluteFSPath } = safeRequire('swagger-ui-dist');
-    this.swaggerUiAssetPath = getAbsoluteFSPath();
+    if (getAbsoluteFSPath) {
+      this.swaggerUiAssetPath = getAbsoluteFSPath();
+    }
   }
 
   @Get('/json')
