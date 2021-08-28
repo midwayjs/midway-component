@@ -309,10 +309,12 @@ export class SwaggerMetaGenerator {
       case 'array':
         define.minItems = min;
         define.maxItems = max;
-        define.items = this.generateSwaggerByJoiProperty(
-          joiSchema.$_terms.items[0],
-          pathName
-        );
+        if (joiSchema.$_terms.items[0]) {
+          define.items = this.generateSwaggerByJoiProperty(
+            joiSchema.$_terms.items[0],
+            pathName
+          );
+        }
     }
     return define;
   }
