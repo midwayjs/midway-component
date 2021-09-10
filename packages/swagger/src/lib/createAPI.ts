@@ -21,6 +21,7 @@ export interface APIParamFormat {
   deprecated?: boolean;
   allowEmptyValue?: boolean;
   example?: any;
+  $ref?: string;
 }
 
 export interface APIPropertyFormat {
