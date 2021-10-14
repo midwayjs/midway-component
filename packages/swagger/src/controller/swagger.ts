@@ -71,7 +71,7 @@ export class SwaggerController {
       );
       return htmlContent.replace(
         'https://petstore.swagger.io/v2/swagger.json',
-        '/swagger-ui/json'
+        this.ctx.path.replace('/swagger-ui/index.html', '/swagger-ui/json')
       );
     } else {
       return this.getSwaggerUIResource(resourceAbsolutePath);
