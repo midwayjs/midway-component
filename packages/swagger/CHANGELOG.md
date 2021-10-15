@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.7...@midwayjs/swagger@1.3.0) (2021-10-15)
+
+
+### Bug Fixes
+
+* json with prefix ([#35](https://github.com/midwayjs/midway-component/issues/35)) ([a1f3cf8](https://github.com/midwayjs/midway-component/commit/a1f3cf8833d66e007b3ccd6a9ecb2001713088e6))
+* swagger front url ([#36](https://github.com/midwayjs/midway-component/issues/36)) ([c7aa027](https://github.com/midwayjs/midway-component/commit/c7aa027c4f8ec1da9c3fe331739c30127a70cdfb))
+
+
+### Features
+
+* swagger upgrade ([#33](https://github.com/midwayjs/midway-component/issues/33)) ([2ae27ca](https://github.com/midwayjs/midway-component/commit/2ae27cadf5f9f31c1a603a7316fb42e3b895bdac))
+
+
+
+
+
 ## [1.0.7](https://github.com/midwayjs/midway-component/compare/@midwayjs/swagger@1.0.6...@midwayjs/swagger@1.0.7) (2021-03-22)
 
 
