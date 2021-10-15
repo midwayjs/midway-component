@@ -70,8 +70,8 @@ export class SwaggerController {
         'utf-8'
       );
       return htmlContent.replace(
-        '\"https://petstore.swagger.io/v2/swagger.json\"',
-        'location.href.replace(\'/swagger-ui/index.html\', \'/swagger-ui/json\')',
+        '"https://petstore.swagger.io/v2/swagger.json"',
+        "location.href.replace('/swagger-ui/index.html', '/swagger-ui/json')"
       );
     } else {
       return this.getSwaggerUIResource(resourceAbsolutePath);
